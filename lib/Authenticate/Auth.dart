@@ -46,26 +46,6 @@ class Auth{
 
 
 
-  // register with email and password
-  Future registerWithEmailAndPassword(String email,String password) async{
-    try{
-      AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      //grab user from that result
-      FirebaseUser fb_user  = result.user;
-
-      //create a new document for user with uid
-      // dont need now!!!!!!await Database().updateUserData("0", "new crew member", 100);
-      return _userFromFireBaseUser(fb_user);
-      // will only work if it was succesful ie can sign in with email and password
-    }
-    catch(e){
-      print(e);
-      print("could not create user");
-      return null;
-
-    }
-  }
-
   //sign out
   Future signOut() async{
     try{

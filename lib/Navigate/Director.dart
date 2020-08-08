@@ -37,7 +37,7 @@ class _DirectorState extends State<Director> {
       providers: [
         StreamProvider<List<FoodItem>>.value(value:Database().foodAndConnect(widget.resturant)),
         ChangeNotifierProvider.value(value: AppState()),
-        ChangeNotifierProvider.value(value: RegisterState()),
+      //  ChangeNotifierProvider.value(value: RegisterState()),
         StreamProvider<List<LocationN>>.value(value:Database().DriverLocation()),
 
 

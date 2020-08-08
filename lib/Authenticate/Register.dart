@@ -3,6 +3,7 @@ import 'package:mymenu/Authenticate/Auth.dart';
 import 'package:mymenu/Shared/Constants.dart';
 import 'package:mymenu/Shared/Loading.dart';
 import 'package:mymenu/States/RegisterState.dart';
+import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -14,11 +15,10 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  RegisterState registerState = RegisterState();
-
 
   @override
   Widget build(BuildContext context) {
+   final registerState = Provider.of<RegisterState>(context);
     return registerState.loading
         ? Loading()
         : Scaffold(
@@ -64,9 +64,9 @@ class _RegisterState extends State<Register> {
                     TextFormField(
                       decoration:
                           textInputDecoration.copyWith(hintText: "Email"),
-                      // ignore: missing_return
+
                       validator: (val){
-                        registerState.validateEmail(val);
+                       return registerState.validateEmail(val);
                       },
                       onChanged: (val) {
                         //returns a value each time the user types or deletes something
@@ -80,14 +80,7 @@ class _RegisterState extends State<Register> {
                       decoration:
                           textInputDecoration.copyWith(hintText: "Password"),
                       validator: (val) {
-                        if (val.length < 6) {
-                          //user didn't enter valid password
-                          return "Enter password 6 characters long";
-                        } else {
-                          //user entered valid password
-
-                          return null;
-                        }
+                       return registerState.validatePassword(val);
                       },
                       obscureText: true, // encrypts password
                       onChanged: (val) {
@@ -100,26 +93,8 @@ class _RegisterState extends State<Register> {
                     SizedBox(height: 50),
                     RaisedButton(
                       onPressed: () async {
-                        //takes some time need to interact with firebase
 
-                        if (registerState.formKey.currentState.validate()) {
-                          // if the form is valid
-                          setState(() {
-                            registerState.loading = true;
-                          });
-
-                          dynamic result = await registerState.auth.registerWithEmailAndPassword(
-                              registerState.email,
-                              registerState
-                                  .password); //used dynamic because could either get user or null
-                          if (result == null) {
-                            setState(() {
-                              registerState.loading = false;
-                              registerState.error =
-                                  "please supply a valid email";
-                            });
-                          }
-                        }
+                        registerState.registerClicked();
                       },
                       color: Colors.black,
                       child: Text(
