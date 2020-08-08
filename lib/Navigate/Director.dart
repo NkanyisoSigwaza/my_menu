@@ -7,6 +7,7 @@ import 'package:mymenu/Models/FoodItem.dart';
 import 'package:mymenu/Models/Order.dart';
 import 'package:mymenu/Models/User.dart';
 import 'package:mymenu/Shared/Database.dart';
+import 'package:mymenu/States/HomeState.dart';
 import 'package:mymenu/States/RegisterState.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +38,7 @@ class _DirectorState extends State<Director> {
       providers: [
         StreamProvider<List<FoodItem>>.value(value:Database().foodAndConnect(widget.resturant)),
         ChangeNotifierProvider.value(value: AppState()),
-      //  ChangeNotifierProvider.value(value: RegisterState()),
+        ChangeNotifierProvider.value(value: HomeState()),
         StreamProvider<List<LocationN>>.value(value:Database().DriverLocation()),
 
 

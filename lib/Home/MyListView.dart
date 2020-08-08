@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:mymenu/Home/Description.dart';
 import 'package:mymenu/Models/FoodItem.dart';
+import 'package:mymenu/Shared/Loading.dart';
 
 import 'package:provider/provider.dart';
 
@@ -28,9 +29,8 @@ class _MyListViewState extends State<MyListView> {
       });
     }
 
-    //final foodAndConnect = Provider.of<List<Users>>(context); //?? [FoodItem(title:"none",price: 0.0,category: "none",id:"0",image:"https://cdn.pixabay.com/photo/2018/03/04/20/08/burger-3199088__340.jpg")];  // getting data from stream provider. ie there has been some change in the database
-    //shouldLoad = foodAndConnect.length==1 ? false:true;
-    return Container(
+    return widget.foodAndConnect.length==0?
+    Loading(): Container(
       child:Expanded(
         child: ListView.builder(
           //scrollDirection: Axis.horizontal,
@@ -44,7 +44,6 @@ class _MyListViewState extends State<MyListView> {
                     child: ListTile(
                       onTap: (){
                         setState(() {
-                          print(widget.foodAndConnect.length);
                           return _showSettingsPanel(widget.foodAndConnect[index]);
                         });
                       },
@@ -57,9 +56,6 @@ class _MyListViewState extends State<MyListView> {
                           fontWeight: FontWeight.w300,
 
                         ),
-
-
-
 
                       ),
                       trailing:Image.network(widget.foodAndConnect[index].image),

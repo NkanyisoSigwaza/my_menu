@@ -6,12 +6,9 @@ import 'package:mymenu/Models/User.dart';
 class SignInState with ChangeNotifier {
 
   bool loading = false;
-  final _formKey = GlobalKey<
-      FormState>(); // will allow us to validate our form make sure the user doesnt f up
+  final _formKey = GlobalKey<FormState>(); // will allow us to validate our form make sure the user doesnt f up
   final FirebaseAuth _auth= FirebaseAuth.instance;
   String error = "";
-
-  // text field state
   String email = "";
   String password = "";
 
@@ -24,7 +21,6 @@ class SignInState with ChangeNotifier {
   String validateEmail(String email) {
     if (email.isEmpty) {
       //user didn't enter email
-
       notifyListeners();
       return "Enter email";
     }
@@ -37,7 +33,6 @@ class SignInState with ChangeNotifier {
   String validatePassword(String password) {
     if (password.length < 6) {
       //user didn't enter valid password
-
       notifyListeners();
       return "Enter password 6 characters long";
     }
@@ -53,19 +48,13 @@ class SignInState with ChangeNotifier {
       // after validating if entered correct entries
       //true:false if email and correct type password entered
       loading = true;
-
-
       dynamic result = await signInWithEmailAndPassword(
           email, password); //used dynamic because could either get user or null
-
       if (result == null) {
         error = "Could not sign in with those credentials";
         loading = false;
-
       }
-
     }
-
     notifyListeners();
   }
 
