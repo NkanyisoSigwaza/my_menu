@@ -48,43 +48,7 @@ class Auth{
   //users connecting to database
   final CollectionReference orderCollection = Firestore.instance.collection("Orders");
 
-  //data creation
-  Future updateUserData(FoodItem food,String id) async{
 
-
-
-    uid = await inputData();
-   // print(uid);
-
-    var docData = {
-      "${food.title}":{
-        "title":food.title,
-        "price":food.price,
-        "quantity":food.quantity,
-        "image":food.image,
-        "inActive":1,
-        "date":DateTime.now(),
-        "restaurant":food.restaurant,
-        "checkOut":"No"
-      }
-    };
-
-
-    return await Firestore.instance.collection("OrdersRefined").document(uid).setData(docData,merge: true);
-    return await Firestore.instance.collection("OrdersRefined").document(uid).setData({
-
-
-    "title":food.title,
-    "id":uid,
-    "foodID":id,
-    "price":food.price,
-    "image":food.image,
-    "quantity":food.quantity,
-
-    },merge:true
-    );//if document doesn't exist yet firebase will create that document with that user id
-
-  }
 
   //CB and edit
   Future checkOutApproved(ConfirmCheckOut food) async{

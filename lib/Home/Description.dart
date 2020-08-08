@@ -5,6 +5,8 @@ import 'package:mymenu/Models/FoodChosen.dart';
 import 'package:mymenu/Models/FoodItem.dart';
 import 'package:mymenu/Shared/Database.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:mymenu/States/DescriptionState.dart';
+import 'package:provider/provider.dart';
 
 
 class Description extends StatefulWidget {
@@ -19,13 +21,13 @@ class Description extends StatefulWidget {
 }
 
 class _DescriptionState extends State<Description> {
-  int count = 1;
-  Auth _auth = Auth();
+
 
 
   @override
   Widget build(BuildContext context) {
-    widget.food.quantity = count;
+    final descriptionState = Provider.of<DescriptionState>(context);
+    widget.food.quantity = descriptionState.count;
 
     return Container(
       child:Column(
@@ -72,8 +74,7 @@ class _DescriptionState extends State<Description> {
                 backgroundColor: Colors.grey,
                 onPressed: (){
                   setState(() {
-                    count--;
-                    widget.food.quantity = count;
+                    widget.food.quantity = descriptionState.decreaseQuantity();
                   });
                 },
                 child:Icon(
@@ -95,8 +96,8 @@ class _DescriptionState extends State<Description> {
                 backgroundColor: Colors.grey,
                 onPressed: (){
                   setState(() {
-                    count++;
-                    widget.food.quantity = count;
+
+                    widget.food.quantity = descriptionState.addQuantity();
                   });
                 },
                 child:Icon(
@@ -112,13 +113,12 @@ class _DescriptionState extends State<Description> {
 
           FlatButton.icon(
 
-            onPressed: (){
-              print("user is ${_auth.toString()}");
-              setState(() {
-                count = 0;
-              });
-              _auth.updateUserData(widget.food,widget.food.id); //uploads order to database
+            onPressed: ()async{
 
+              setState(() {
+                descriptionState.count = 0;
+              });
+              await descriptionState.updateUserData(widget.food,widget.food.id); //uploads order to database
               Navigator.pop(context);
             },
             icon: Icon(
