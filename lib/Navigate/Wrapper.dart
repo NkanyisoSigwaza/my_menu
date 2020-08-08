@@ -4,7 +4,6 @@ import 'package:mymenu/Authenticate/Authenticate.dart';
 
 import 'package:mymenu/Models/User.dart';
 import 'package:mymenu/Navigate/Director.dart';
-import 'package:mymenu/States/RegisterState.dart';
 import 'package:provider/provider.dart';
 import 'package:mymenu/Home/Resturants.dart';
 import 'package:mymenu/Home/Resturants.dart';
@@ -18,10 +17,7 @@ class Wrapper extends StatelessWidget {
 
     if (user==null){
       // user not signed in
-      return ChangeNotifierProvider.value(
-          value: RegisterState(),
-          child: Authenticate()
-      );
+      return Authenticate();
     }
     else{
       // Bastard signed in!

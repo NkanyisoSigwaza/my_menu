@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
+import 'package:mymenu/Authenticate/Authenticate.dart';
 import 'package:mymenu/Authenticate/SignIn.dart';
 import 'package:mymenu/Home/Budget.dart';
 import 'package:mymenu/Home/CheckOut.dart';
 import 'package:mymenu/Maps/MyMap.dart';
 import 'package:mymenu/Models/FoodItem.dart';
+import 'package:mymenu/Navigate/Wrapper.dart';
 
 import 'package:mymenu/Shared/Database.dart';
 
@@ -110,7 +112,7 @@ class _HomeState extends State<Home> {
                 Navigator.of(context).pop();//closes menu in home pAGE
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SignIn())
+                    MaterialPageRoute(builder: (context) => Wrapper())
                 );
 
               },

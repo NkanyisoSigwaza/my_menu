@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
 import 'package:mymenu/Shared/Constants.dart';
 import 'package:mymenu/Shared/Loading.dart';
+import 'package:mymenu/States/SignInState.dart';
+import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {
 
@@ -17,18 +19,13 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
 
-  bool loading = false;
-  final _formKey = GlobalKey<FormState>(); // will allow us to validate our form make sure the user doesnt f up
-  final Auth _auth = Auth();
-  String error = "";
-  // text field state
-  String email = "";
-  String  password ="";
-
   @override
   Widget build(BuildContext context) {
+
+    final singInState = Provider.of<SignInState>(context);
+
     //if loading is true  return loading widget
-    return loading? Loading() :Scaffold(
+    return singInState.loading? Loading() :Scaffold(
       backgroundColor: Colors.grey[100],
 
       appBar: PreferredSize(
@@ -66,7 +63,7 @@ class _SignInState extends State<SignIn> {
       body: Container(
         padding:EdgeInsets.symmetric(vertical:20,horizontal: 50),
         child: Form(
-          key:_formKey,
+          key:singInState.formKey,
           child:Column(
             children: <Widget>[
               SizedBox(
@@ -75,20 +72,12 @@ class _SignInState extends State<SignIn> {
               TextFormField(
                 decoration: textInputDecoration.copyWith(hintText: "Email") ,
                 validator: (val){
-                  if(val.isEmpty){
-                    //user didn't enter email
-                    return "Enter email";
-                  }
-                  else{
-                    //user entered email
-                    // could have done validator: (val) => val.isEmpty? "Enter an email":null;
-                    return null;
-                  }
+                 return singInState.validateEmail(val);
                 },
                 onChanged: (val){
                   //returns a value each time the user types or deletes something
                   setState(() {
-                    email = val;
+                    singInState.email = val;
                   });
                 },
 
@@ -99,21 +88,13 @@ class _SignInState extends State<SignIn> {
               TextFormField(
                 decoration: textInputDecoration.copyWith(hintText: "Password"),
                 validator: (val) {
-                  if (val.length < 6) {
-                    //user didn't enter valid password
-                    return "Enter password 6 characters long";
-                  }
-                  else {
-                    //user entered valid password
-
-                    return null;
-                  }
+                  return singInState.validatePassword(val);
                 },
                 obscureText: true,// encrypts password
                 onChanged: (val){
                   //returns a value each time the user types or deletes something
                   setState(() {
-                    password = val;
+                    singInState.password = val;
                   });
                 },
 
@@ -124,24 +105,8 @@ class _SignInState extends State<SignIn> {
               RaisedButton(
                 onPressed:() async{
 
-                  if(_formKey.currentState.validate()){
-                    // after validating if entered correct entries
-                    setState(() {
-                      loading = true;
-                    });
-                    //true/ false if email and correct type password entered
-                    dynamic result = await _auth.signInWithEmailAndPassword(email, password);//used dynamic because could either get user or null
+                  singInState.signInClicked();
 
-                    if(result==null){
-                      setState(() {
-                        error = "Could not sign in with those credentials";
-                        loading = false;
-                        print(error);
-                      });
-                    }
-                    print(email);
-                    print(password);
-                  }
                 },
                 color:Colors.black,
                 child:Text(
@@ -152,7 +117,7 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
               Text(
-                error,
+                singInState.error,
                 style:TextStyle(
                   color:Colors.red,
                   fontSize: 14,
