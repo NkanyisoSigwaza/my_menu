@@ -48,7 +48,9 @@ class DescriptionState with ChangeNotifier{
         "inActive":1,
         "date":DateTime.now(),
         "restaurant":food.restaurant,
-        "checkOut":"No"
+        "checkOut":"No",
+        "driverSeen":null,
+        "restaurantSeen":null
       }
     };
 
