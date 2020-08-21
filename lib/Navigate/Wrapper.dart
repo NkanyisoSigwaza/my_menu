@@ -4,6 +4,8 @@ import 'package:mymenu/Authenticate/Authenticate.dart';
 
 import 'package:mymenu/Models/User.dart';
 import 'package:mymenu/Navigate/Director.dart';
+import 'package:mymenu/Shared/Database.dart';
+import 'package:mymenu/States/RestaurantState.dart';
 import 'package:provider/provider.dart';
 import 'package:mymenu/Home/Resturants.dart';
 import 'package:mymenu/Home/Resturants.dart';
@@ -21,7 +23,10 @@ class Wrapper extends StatelessWidget {
     }
     else{
       // Bastard signed in!
-      return Resturants();
+      return StreamProvider.value(
+        value: RestaurantState().numberRestaurants(),
+          child: Resturants()
+      );
     }
 
 
