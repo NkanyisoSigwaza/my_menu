@@ -40,20 +40,25 @@ class _MyListViewState extends State<MyListView> {
               return Padding(
                 padding: EdgeInsets.fromLTRB(20, 20, 20,0),
                 child: Card(
-                    color:Colors.grey[200],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                    color:Colors.black,
+                    //color:Colors.grey[200],
                     child: ListTile(
                       onTap: (){
                         setState(() {
                           return _showSettingsPanel(widget.foodAndConnect[index]);
                         });
                       },
-                      contentPadding: EdgeInsets.all(30),
+                      contentPadding: EdgeInsets.all(40),
 
                       title:Text(
                         widget.foodAndConnect[index].title ?? "No title",
                         style:TextStyle(
                           letterSpacing: 2,
                           fontWeight: FontWeight.w300,
+                          color:Colors.white
 
                         ),
 
@@ -66,6 +71,7 @@ class _MyListViewState extends State<MyListView> {
                           style:TextStyle(
                             letterSpacing: 2,
                             fontWeight: FontWeight.w200,
+                              color:Colors.white
                           ),
                         ),
                       ),

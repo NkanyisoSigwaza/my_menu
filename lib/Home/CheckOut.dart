@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mymenu/Home/OrderPlaced.dart';
+import 'package:mymenu/Home/messageDriver.dart';
 import 'package:mymenu/Maps/MyMap.dart';
 import 'package:mymenu/Models/Order.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
@@ -185,7 +187,7 @@ class _CheckOutState extends State<CheckOut> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => MyMap())
+                                        builder: (context) => OrderPlaced())
                                 );
                               });
 

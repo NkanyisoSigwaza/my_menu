@@ -20,6 +20,7 @@ import 'package:mymenu/Home/MyListView.dart';
 import 'package:mymenu/States/HomeState.dart';
 
 import 'package:provider/provider.dart';
+import "package:mymenu/Services/firebase_analytics.dart";
 
 import 'package:mymenu/VoucherHome/VoucherHome.dart';
 
@@ -33,6 +34,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+//    analytics.logLogin();
+//    analytics.logEvent(name: "Restaurant Screen");
 
     final foodAndConnect = Provider.of<List<FoodItem>>(context);
     final homeState = Provider.of<HomeState>(context);
@@ -40,7 +43,8 @@ class _HomeState extends State<Home> {
 
 
     return  foodAndConnect==null ? Loading():Scaffold(
-      backgroundColor: Colors.grey[100],
+      //backgroundColor: Colors.grey[100],
+        backgroundColor: Colors.white,
       appBar: MyAppBar(),
       drawer: Container(
         margin: EdgeInsets.only(right:100),
