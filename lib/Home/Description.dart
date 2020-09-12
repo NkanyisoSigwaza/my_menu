@@ -71,7 +71,7 @@ class _DescriptionState extends State<Description> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               FloatingActionButton(
-                backgroundColor: Colors.grey,
+                backgroundColor:Colors.red,//Colors.grey,
                 onPressed: (){
                   setState(() {
                     widget.food.quantity = descriptionState.decreaseQuantity();
@@ -93,7 +93,7 @@ class _DescriptionState extends State<Description> {
                 ),
               ),
               FloatingActionButton(
-                backgroundColor: Colors.grey,
+                backgroundColor: Colors.red,
                 onPressed: (){
                   setState(() {
 

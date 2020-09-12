@@ -25,6 +25,7 @@ class RestaurantState with ChangeNotifier{
           restaurant: snapshot[element]["restaurant"],
           image: snapshot[element]["image"],
           id:snapshot[element]["id"],
+
         ));
       });
     }
@@ -45,11 +46,14 @@ class RestaurantState with ChangeNotifier{
 
   List<Restaurant> _numRestaurants(QuerySnapshot snapshot){
 
+
     return snapshot.documents.map((doc){
+      print("categories______________________-${doc.data["categories"]}");
       // returning a brew object for each document
       return Restaurant(
           restaurantName: doc.documentID,
-          restaurantBackground: doc.data["picture"]
+          restaurantBackground: doc.data["picture"],
+          categories: doc.data["categories"]
       );
     }).toList();
   }

@@ -20,6 +20,7 @@ class Director extends StatefulWidget {
   final Restaurant restaurant;
 
 
+
   Director({this.restaurant});
   @override
   _DirectorState createState() => _DirectorState();
@@ -52,7 +53,9 @@ class _DirectorState extends State<Director> {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Home(),
+        home: Home(
+          restaurant:widget.restaurant
+        ),
       ),
     );
 

@@ -11,6 +11,7 @@ import 'package:mymenu/Authenticate/SignIn.dart';
 import 'package:mymenu/Home/CheckOut.dart';
 import 'package:mymenu/Maps/MyMap.dart';
 import 'package:mymenu/Models/FoodItem.dart';
+import 'package:mymenu/Models/Restuarant.dart';
 import 'package:mymenu/Navigate/Wrapper.dart';
 
 import 'package:mymenu/Shared/Database.dart';
@@ -26,6 +27,10 @@ import 'package:mymenu/VoucherHome/VoucherHome.dart';
 
 
 class Home extends StatefulWidget {
+
+  Restaurant restaurant;
+
+  Home({this.restaurant});
   @override
   _HomeState createState() => _HomeState();
 }
@@ -36,16 +41,49 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
 //    analytics.logLogin();
 //    analytics.logEvent(name: "Restaurant Screen");
+  List<String> words = [
+    "one","two","three","four","five","one","two","three","four","five","one","two","three","four","five"
+  ];
 
-    final foodAndConnect = Provider.of<List<FoodItem>>(context);
+    final foodItems = Provider.of<List<FoodItem>>(context);
     final homeState = Provider.of<HomeState>(context);
 
 
 
-    return  foodAndConnect==null ? Loading():Scaffold(
+    return  foodItems==null ? Loading():Scaffold(
       //backgroundColor: Colors.grey[100],
         backgroundColor: Colors.white,
-      appBar: MyAppBar(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(85),// makes app bar taller
+
+        child: Padding(
+          padding: const EdgeInsets.only(top:24),
+          child: Container(
+            child: AppBar(
+             //backgroundColor: Colors.red[500],
+              backgroundColor: Colors.white,
+
+              elevation: 0,
+              title:Text(
+                foodItems[0].restaurant,
+
+                style:TextStyle(
+                  color: Colors.black,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w300,
+                  wordSpacing: 2,
+                  letterSpacing: 2,
+
+                ),
+
+              ),
+              centerTitle: true,
+
+            ),
+          ),
+        ),
+
+      ),
       drawer: Container(
         margin: EdgeInsets.only(right:100),
         color:Colors.white,
@@ -99,11 +137,20 @@ class _HomeState extends State<Home> {
           Container(
             //margin:EdgeInsets.only(top:10),
               padding: EdgeInsets.only(top:10),
-              color:Colors.grey[400],
+             // color:Colors.grey[400],
               child:Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  FlatButton(
+                  OutlineButton(
+
+                    borderSide: BorderSide(
+                        color:Colors.grey
+                    ),
+
+                    shape:RoundedRectangleBorder(
+
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                     onPressed: ()async{
                       homeState.tab =0;
                       //print("yeah");
@@ -119,7 +166,15 @@ class _HomeState extends State<Home> {
 
                     ),
                   ),
-                  FlatButton(
+                  OutlineButton(
+                    borderSide: BorderSide(
+                        color:Colors.grey
+                    ),
+
+                    shape:RoundedRectangleBorder(
+
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                     onPressed: ()async{
                     await homeState.showPizza();
                   },
@@ -131,7 +186,15 @@ class _HomeState extends State<Home> {
 
                     ),
                   ),
-                  FlatButton(
+                  OutlineButton(
+                    borderSide: BorderSide(
+                        color:Colors.grey
+                    ),
+
+                    shape:RoundedRectangleBorder(
+
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                     onPressed: ()async{
 
                       await homeState.showDrinks();
@@ -145,7 +208,15 @@ class _HomeState extends State<Home> {
                     ),
 
                   ),
-                  FlatButton(
+                  OutlineButton(
+                    borderSide: BorderSide(
+                        color:Colors.grey
+                    ),
+
+                    shape:RoundedRectangleBorder(
+
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                     onPressed: ()async{
                       await homeState.showDessert();
                     },
@@ -162,11 +233,32 @@ class _HomeState extends State<Home> {
                 ],
               )
           ),
+          Container(
+            height: 50,
+            width: 600,
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: widget.restaurant.categories.length,
+                itemBuilder: (context,index){
+                return GestureDetector(
+                  child: Card(
+                    child:Text(widget.restaurant.categories[index])
+                  ),
+                  onTap: ()async{
+                   await homeState.category(widget.restaurant.restaurantName, widget.restaurant.categories[index]);
+                  },
+                );
+                }),
+          ),
+        SizedBox(
+          height:10
+        ),
           if(homeState.tab==0)
-            MyListView(foodAndConnect: foodAndConnect),
+            MyListView(foodAndConnect: foodItems),
 
           if(homeState.tab==1)
-            MyListView(foodAndConnect: homeState.pizzas),
+            MyListView(foodAndConnect: homeState.selectedCategory),
 
           if(homeState.tab==2)
             MyListView(foodAndConnect: homeState.drinks),
@@ -175,33 +267,36 @@ class _HomeState extends State<Home> {
             MyListView(foodAndConnect: homeState.desserts),
 
           Container(
-            color:Colors.grey[500],
+            width:165,
+            //color:Colors.grey[500],
+            color: Colors.black,
             //height:50,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Expanded(
+                FlatButton(
+                  onPressed: (){
+                    setState(() {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CheckOut())
+                      );
+                    });
+                  },
+                  child:Text(
+                    "Check Out",
+                    style:TextStyle(
+                      fontSize: 20,
 
-                  child: FlatButton(
-                    onPressed: (){
-                      setState(() {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => CheckOut())
-                        );
-                      });
-                    },
-                    child:Text(
-                      "Check Out",
-                      style:TextStyle(
-
-                        letterSpacing: 2,
-                      ),
-
+                      letterSpacing: 2,
+                      color: Colors.white
                     ),
-                    color: Colors.grey[500],
-
 
                   ),
+                  color: Colors.red[900],
+
+
+
                 ),
               ],
             ),
@@ -217,34 +312,5 @@ class _HomeState extends State<Home> {
   }
 }
 
-Widget MyAppBar(){
 
-  return(
-      PreferredSize(
-           preferredSize: Size.fromHeight(60),// makes app bar taller
-
-           child: AppBar(
-              backgroundColor: Colors.grey[300],
-
-              elevation: 0,
-              title:Text(
-                "Food and Connect",
-
-                  style:TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      wordSpacing: 2,
-                      letterSpacing: 2,
-
-                    ),
-
-              ),
-              centerTitle: true,
-              titleSpacing: 10,
-      ),
-
-  )
-  );
-}
 

@@ -10,6 +10,7 @@ class HomeState with ChangeNotifier{
   List<FoodItem> desserts = [];
   List<FoodItem> drinks = [];
   int tab = 0;
+  List<FoodItem> selectedCategory = [];
 
 
   // Displays pizza food items only
@@ -104,6 +105,40 @@ class HomeState with ChangeNotifier{
 
       }
     });
+
+  }
+
+  category(String restaurant, String category)async{
+    selectedCategory = [];
+    tab=1;
+    try {
+      Firestore.instance.collection("Restaurants")
+          .document(restaurant)
+          .snapshots()
+          .forEach((element) {
+        element.data.forEach((key, value) {
+          if (value["category"] == category) {
+            selectedCategory.add(
+                FoodItem(
+                    title: value["title"],
+                    price: value["price"],
+                    image: value["image"],
+                    category: value["category"],
+                    restaurant: value["restaurant"],
+                    id: value["id"]
+                )
+            );
+          }
+        });
+      });
+
+    }
+    catch(e){
+
+    }
+    notifyListeners();
+
+
 
   }
 
