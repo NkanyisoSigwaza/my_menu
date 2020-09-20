@@ -1,9 +1,11 @@
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mymenu/Models/Restuarant.dart';
 import 'package:mymenu/Navigate/Director.dart';
 import 'package:mymenu/Shared/Loading.dart';
+import 'package:mymenu/Shared/UserDrawer.dart';
 import 'package:provider/provider.dart';
 
 class Resturants extends StatefulWidget {
@@ -16,17 +18,18 @@ class _ResturantsState extends State<Resturants> {
   Widget build(BuildContext context) {
     final restaurants = Provider.of<List<Restaurant>>(context);
     return restaurants==null? Loading(): Scaffold(
-      backgroundColor: Colors.white,
+      drawer:UserDrawer(),
+      backgroundColor: Colors.black,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
         child: AppBar(
           title: Text(
               "Home",
             style:TextStyle(
-              fontSize: 30,
+              fontSize: 23,
             )
           ),
-          backgroundColor: Colors.red[900],
+          backgroundColor: Colors.grey[900],
           centerTitle: true,
         ),
       ),
@@ -35,52 +38,46 @@ class _ResturantsState extends State<Resturants> {
 
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
-              child: Align(
-                alignment: Alignment.topLeft,
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 50, 0, 30),
                 child: Text(
-                    "New",
+                    "Specials",
                   style: TextStyle(
+                    color: Colors.amber,
                     fontSize: 30,
                     letterSpacing: 2,
-                    fontStyle:FontStyle.italic,
+                    //fontWeight: FontWeight.bold
+                    //fontStyle:FontStyle.italic,
 
 
                   ),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal:30),
-              child: Container(
-                color: Colors.black,
-                height:150,
-                width:MediaQuery.of(context).size.width,
-                child: ListView.builder(
-                    //shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount:restaurants.length,
-                    itemBuilder: (context,index){
-                      return Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: GestureDetector(
-                          child: Container(
-                            //width:300,
-                           // height:600,
-                            child: Card(
-                             // color:Colors.black,
-                              shape:RoundedRectangleBorder(
 
-                                borderRadius: BorderRadius.circular(60),
-                          ),
-                              child: Image(
-                                image:NetworkImage(restaurants[index].restaurantBackground ?? "https://www.bengi.nl/wp-content/uploads/2014/10/no-image-available1.png"),
-                                fit:BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          onTap: (){
+            CarouselSlider.builder(
+              options: CarouselOptions(
+                height: 150,
+                aspectRatio: 16/9,
+                viewportFraction: 0.8,
+                initialPage: 0,
+                enableInfiniteScroll: true,
+                reverse: false,
+                autoPlay: true,
+                autoPlayInterval: Duration(seconds: 8),
+                autoPlayAnimationDuration: Duration(milliseconds: 800),
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enlargeCenterPage: true,
+                //onPageChanged: callbackFunction,
+                scrollDirection: Axis.horizontal,
+              ),
+              itemCount: restaurants.length,
+              itemBuilder: (BuildContext context, int index) =>
+                  Container(
+                    child: GestureDetector(
+                      onTap: (){
                             setState(() {
                               Navigator.push(
                                   context,
@@ -88,24 +85,75 @@ class _ResturantsState extends State<Resturants> {
                               );
                             });
                           },
+                      child: Card(
+                        shape:RoundedRectangleBorder(
+
+                          borderRadius: BorderRadius.circular(60),
                         ),
-                      );
-                    }),
-              ),
+                        child: Image(
+                          image:NetworkImage(restaurants[index].restaurantBackground ?? "https://www.bengi.nl/wp-content/uploads/2014/10/no-image-available1.png"),
+                          fit:BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
             ),
-//            SizedBox(
-//              height:50
+//            Padding(
+//              padding: const EdgeInsets.symmetric(horizontal:30),
+//              child: Container(
+//                color: Colors.black,
+//                height:150,
+//                width:MediaQuery.of(context).size.width,
+//                child: ListView.builder(
+//                    //shrinkWrap: true,
+//                    scrollDirection: Axis.horizontal,
+//                    itemCount:restaurants.length,
+//                    itemBuilder: (context,index){
+//                      return Padding(
+//                        padding: const EdgeInsets.all(12),
+//                        child: GestureDetector(
+//                          child: Container(
+//                            //width:300,
+//                           // height:600,
+//                            child: Card(
+//                             // color:Colors.black,
+//                              shape:RoundedRectangleBorder(
+//
+//                                borderRadius: BorderRadius.circular(60),
+//                          ),
+//                              child: Image(
+//                                image:NetworkImage(restaurants[index].restaurantBackground ?? "https://www.bengi.nl/wp-content/uploads/2014/10/no-image-available1.png"),
+//                                fit:BoxFit.cover,
+//                              ),
+//                            ),
+//                          ),
+//                          onTap: (){
+//                            setState(() {
+//                              Navigator.push(
+//                                  context,
+//                                  MaterialPageRoute(builder: (context) => Director(restaurant: restaurants[index],))
+//                              );
+//                            });
+//                          },
+//                        ),
+//                      );
+//                    }),
+//              ),
 //            ),
+////            SizedBox(
+////              height:50
+////            ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0,20,20,20),
+              padding: const EdgeInsets.fromLTRB(10,20,20,20),
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "All Restaurants",
+                  "Restaurants",
                   style: TextStyle(
                     fontSize: 30,
                     letterSpacing: 2,
-                    fontStyle:FontStyle.italic,
+                    //fontStyle:FontStyle.italic,
+                    color: Colors.amber
 
 
                   ),
@@ -132,30 +180,24 @@ class _ResturantsState extends State<Resturants> {
 //                        ),
 //                      ),
                         Expanded(
-                          child: GestureDetector(
-                            child: Container(
-                              //width:300,
-                              //height:600,
-                              margin:EdgeInsets.all(20),
+                          child: Container(
+                            //width:300,
+                            //height:600,
+                            margin:EdgeInsets.all(20),
 
 
 
-                              child: Card(
-                                //color:Colors.black,
-                                child: Image(
-                                  image:NetworkImage(restaurants[index].restaurantBackground ?? "https://www.bengi.nl/wp-content/uploads/2014/10/no-image-available1.png"),
-                                  fit:BoxFit.cover,
-                                ),
-                              ),
+                            child:CircleAvatar(
+                              backgroundImage:NetworkImage(restaurants[index].restaurantBackground ?? "https://www.bengi.nl/wp-content/uploads/2014/10/no-image-available1.png"),
+                              radius:100,
                             ),
-                            onTap: (){
-                              setState(() {
-                               Navigator.push(
-                                   context,
-                                   MaterialPageRoute(builder: (context) => Director(restaurant: restaurants[index],))
-                               );
-                            });
-                            },
+//                            Card(
+//                              //color:Colors.black,
+//                              child: Image(
+//                                image:NetworkImage(restaurants[index].restaurantBackground ?? "https://www.bengi.nl/wp-content/uploads/2014/10/no-image-available1.png"),
+//                                fit:BoxFit.cover,
+//                              ),
+//                            ),
                           ),
                         ),
 

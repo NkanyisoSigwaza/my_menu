@@ -18,6 +18,7 @@ import 'package:mymenu/Shared/Database.dart';
 
 import 'package:mymenu/Shared/Loading.dart';
 import 'package:mymenu/Home/MyListView.dart';
+import 'package:mymenu/Shared/UserDrawer.dart';
 import 'package:mymenu/States/HomeState.dart';
 
 import 'package:provider/provider.dart';
@@ -84,54 +85,7 @@ class _HomeState extends State<Home> {
         ),
 
       ),
-      drawer: Container(
-        margin: EdgeInsets.only(right:100),
-        color:Colors.white,
-        child: ListView(
-          children: <Widget>[
-            Container(
-
-
-              height:300,
-              child: UserAccountsDrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.grey[400],
-                ),
-
-
-                accountName: Padding(
-                  padding: const EdgeInsets.only(bottom:12),
-                  child: Text("Nkanyiso"),
-                ),
-                accountEmail: Text("sgwnka001@myuct.ac.za"),
-                currentAccountPicture:CircleAvatar(
-                  radius:50,
-                  backgroundImage:AssetImage("Picture/avatar.png") ,
-                  backgroundColor: Colors.white,
-
-
-                ),
-              ),
-            ),
-
-            ListTile(
-              title:Text("Sign out"),
-              onTap: (){
-                Auth().signOut();
-                Navigator.of(context).pop();//closes menu in home pAGE
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Wrapper())
-                );
-                },
-            ),
-            Divider(
-              height:5,
-              color:Colors.black,
-            ),
-          ],
-        ),
-      ),
+      drawer:UserDrawer(),
       body:Column(
         children: <Widget>[
           Container(

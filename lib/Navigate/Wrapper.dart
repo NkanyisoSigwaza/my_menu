@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mymenu/Authenticate/Authenticate.dart';
+import 'package:mymenu/Home/Options.dart';
 
 import 'package:mymenu/Models/User.dart';
 import 'package:mymenu/Navigate/Director.dart';
@@ -25,7 +26,7 @@ class Wrapper extends StatelessWidget {
       // Bastard signed in!
       return StreamProvider.value(
         value: RestaurantState().numberRestaurants(),
-          child: Resturants()
+          child: Options()//Resturants()
       );
     }
 

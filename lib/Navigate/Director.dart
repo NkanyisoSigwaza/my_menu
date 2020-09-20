@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
 import 'package:mymenu/Home/Home.dart';
+import 'package:mymenu/Home/Options.dart';
 import 'package:mymenu/Maps/Models/LocationN.dart';
 import 'package:mymenu/Maps/State/AppState.dart';
 import 'package:mymenu/Models/FoodItem.dart';
@@ -56,6 +57,7 @@ class _DirectorState extends State<Director> {
         home: Home(
           restaurant:widget.restaurant
         ),
+     // home:Options(),
       ),
     );
 
