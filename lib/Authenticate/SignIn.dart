@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
 import 'package:mymenu/Shared/Constants.dart';
 import 'package:mymenu/Shared/Loading.dart';
+import 'package:mymenu/States/SignInState.dart';
+import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {
 
@@ -17,149 +19,157 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
 
-  bool loading = false;
-  final _formKey = GlobalKey<FormState>(); // will allow us to validate our form make sure the user doesnt f up
-  final Auth _auth = Auth();
-  String error = "";
-  // text field state
-  String email = "";
-  String  password ="";
-
   @override
   Widget build(BuildContext context) {
+
+    final singInState = Provider.of<SignInState>(context);
+
     //if loading is true  return loading widget
-    return loading? Loading() :Scaffold(
-      backgroundColor: Colors.grey[100],
+    return singInState.loading? Loading() :Scaffold(
+      resizeToAvoidBottomInset: false,
+      
+      backgroundColor: Colors.black,
 
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60),
-        child: AppBar(
-          backgroundColor: Colors.grey[400],
-          elevation: 0,
-          title:Text(
-              "Sign in",
-            style:TextStyle(
-              color: Colors.black,
-              letterSpacing: 2,
-            ),
-          ),
-          centerTitle: true,
-          actions: <Widget>[
-            FlatButton.icon(
-              onPressed:(){
-                widget.toggleView();
-              },
-              icon:Icon(
-                Icons.person,
-              ),
-              label: Text(
-                  "Register",
-                style:TextStyle(
-                  letterSpacing: 1.2,
-                ),
-              ),
-            )
-          ],
-
-        ),
-      ),
+//      appBar: PreferredSize(
+//        preferredSize: Size.fromHeight(80),
+//        child: AppBar(
+//          backgroundColor: Colors.grey[900],
+//          elevation: 0,
+//          title:Text(
+//              "Sign in",
+//            style:TextStyle(
+//              color: Colors.white,
+//              letterSpacing: 2,
+//              fontSize: 25
+//            ),
+//          ),
+//          centerTitle: true,
+//          actions: <Widget>[
+//            FlatButton.icon(
+//              onPressed:(){
+//                widget.toggleView();
+//              },
+//              icon:Icon(
+//                Icons.person,
+//              ),
+//              label: Text(
+//                  "Register",
+//                style:TextStyle(
+//                  letterSpacing: 1.2,
+//                ),
+//              ),
+//            )
+//          ],
+//
+//        ),
+//      ),
       body: Container(
+//        decoration: BoxDecoration(
+//            image: DecorationImage(
+//                image: AssetImage(
+//                    "Picture/delDocLogo.png"
+//                ),
+//
+//                fit: BoxFit.contain
+//            )
+//        ),
         padding:EdgeInsets.symmetric(vertical:20,horizontal: 50),
-        child: Form(
-          key:_formKey,
-          child:Column(
-            children: <Widget>[
-              SizedBox(
-                height:20,
-              ),
-              TextFormField(
-                decoration: textInputDecoration.copyWith(hintText: "Email") ,
-                validator: (val){
-                  if(val.isEmpty){
-                    //user didn't enter email
-                    return "Enter email";
-                  }
-                  else{
-                    //user entered email
-                    // could have done validator: (val) => val.isEmpty? "Enter an email":null;
-                    return null;
-                  }
-                },
-                onChanged: (val){
-                  //returns a value each time the user types or deletes something
-                  setState(() {
-                    email = val;
-                  });
-                },
+        child: Column(
+          children: [
 
-              ),
-              SizedBox(
-                  height:20
-              ),
-              TextFormField(
-                decoration: textInputDecoration.copyWith(hintText: "Password"),
-                validator: (val) {
-                  if (val.length < 6) {
-                    //user didn't enter valid password
-                    return "Enter password 6 characters long";
-                  }
-                  else {
-                    //user entered valid password
 
-                    return null;
-                  }
-                },
-                obscureText: true,// encrypts password
-                onChanged: (val){
-                  //returns a value each time the user types or deletes something
-                  setState(() {
-                    password = val;
-                  });
-                },
 
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 80, 0, 10),
+              child: Container(
+               child:Image(
+                 image:AssetImage(
+                     "Picture/delDocLogo.png"
+                 ),
+               )
               ),
-              SizedBox(
-                  height:50
-              ),
-              RaisedButton(
-                onPressed:() async{
-
-                  if(_formKey.currentState.validate()){
-                    // after validating if entered correct entries
-                    setState(() {
-                      loading = true;
-                    });
-                    //true/ false if email and correct type password entered
-                    dynamic result = await _auth.signInWithEmailAndPassword(email, password);//used dynamic because could either get user or null
-
-                    if(result==null){
-                      setState(() {
-                        error = "Could not sign in with those credentials";
-                        loading = false;
-                        print(error);
-                      });
-                    }
-                    print(email);
-                    print(password);
-                  }
-                },
-                color:Colors.black,
-                child:Text(
-                  "Sign in",
-                  style:TextStyle(
-                    color:Colors.white,
+            ),
+            Form(
+              key:singInState.formKey,
+              child:Column(
+                children: <Widget>[
+                  SizedBox(
+                    height:20,
                   ),
-                ),
+                  TextFormField(
+                    decoration: textInputDecoration.copyWith(hintText: "Email") ,
+                    validator: (val){
+                     return singInState.validateEmail(val);
+                    },
+                    onChanged: (val){
+                      //returns a value each time the user types or deletes something
+                      setState(() {
+                        singInState.email = val;
+                      });
+                    },
+
+                  ),
+                  SizedBox(
+                      height:20
+                  ),
+                  TextFormField(
+                    decoration: textInputDecoration.copyWith(hintText: "Password"),
+                    validator: (val) {
+                      return singInState.validatePassword(val);
+                    },
+                    obscureText: true,// encrypts password
+                    onChanged: (val){
+                      //returns a value each time the user types or deletes something
+                      setState(() {
+                        singInState.password = val;
+                      });
+                    },
+
+                  ),
+                  SizedBox(
+                      height:50
+                  ),
+                  FlatButton(
+                    onPressed:() async{
+
+                      singInState.signInClicked();
+
+                    },
+                    color:Colors.grey[900],
+                    child:Text(
+                      "Sign in",
+                      style:TextStyle(
+                        color:Colors.white,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    singInState.error,
+                    style:TextStyle(
+                      color:Colors.red,
+                      fontSize: 14,
+                    ),
+                  ),
+
+
+                ],
               ),
-              Text(
-                error,
+            ),
+            RaisedButton(
+              onPressed:() async{
+
+                widget.toggleView();
+
+              },
+              color:Colors.black,
+              child:Text(
+                "Don't have an account? Register",
                 style:TextStyle(
-                  color:Colors.red,
-                  fontSize: 14,
+                  color:Colors.white,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
 import 'package:mymenu/Home/Home.dart';
+import 'package:mymenu/Home/Options.dart';
 import 'package:mymenu/Maps/Models/LocationN.dart';
 import 'package:mymenu/Maps/State/AppState.dart';
 import 'package:mymenu/Models/FoodItem.dart';
 import 'package:mymenu/Models/Order.dart';
+import 'package:mymenu/Models/Restuarant.dart';
 import 'package:mymenu/Models/User.dart';
 import 'package:mymenu/Shared/Database.dart';
+import 'package:mymenu/Shared/Loading.dart';
+import 'package:mymenu/States/DescriptionState.dart';
+import 'package:mymenu/States/HomeState.dart';
 import 'package:mymenu/States/RegisterState.dart';
+import 'package:mymenu/States/RestaurantState.dart';
 import 'package:provider/provider.dart';
 
 
 class Director extends StatefulWidget {
-  final String resturant;
+  final Restaurant restaurant;
 
-  Director({this.resturant});
+
+
+  Director({this.restaurant});
   @override
   _DirectorState createState() => _DirectorState();
 }
@@ -35,16 +43,21 @@ class _DirectorState extends State<Director> {
 
     return MultiProvider(
       providers: [
-        StreamProvider<List<FoodItem>>.value(value:Database().foodAndConnect(widget.resturant)),
+        StreamProvider.value(value: RestaurantState().restaurantChosen(widget.restaurant.restaurantName)),
+       // StreamProvider<List<FoodItem>>.value(value:Database().foodAndConnect(widget.resturant)),
         ChangeNotifierProvider.value(value: AppState()),
-      //  ChangeNotifierProvider.value(value: RegisterState()),
+        ChangeNotifierProvider.value(value: HomeState()),
+        ChangeNotifierProvider.value(value: DescriptionState()),
         StreamProvider<List<LocationN>>.value(value:Database().DriverLocation()),
 
 
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Home(),
+        home: Home(
+          restaurant:widget.restaurant
+        ),
+     // home:Options(),
       ),
     );
 

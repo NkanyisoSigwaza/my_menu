@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:mymenu/Home/Description.dart';
 import 'package:mymenu/Models/FoodItem.dart';
+import 'package:mymenu/Shared/Loading.dart';
 
 import 'package:provider/provider.dart';
 
@@ -28,9 +29,8 @@ class _MyListViewState extends State<MyListView> {
       });
     }
 
-    //final foodAndConnect = Provider.of<List<Users>>(context); //?? [FoodItem(title:"none",price: 0.0,category: "none",id:"0",image:"https://cdn.pixabay.com/photo/2018/03/04/20/08/burger-3199088__340.jpg")];  // getting data from stream provider. ie there has been some change in the database
-    //shouldLoad = foodAndConnect.length==1 ? false:true;
-    return Container(
+    return widget.foodAndConnect.length==0?
+    Loading(): Container(
       child:Expanded(
         child: ListView.builder(
           //scrollDirection: Axis.horizontal,
@@ -38,44 +38,90 @@ class _MyListViewState extends State<MyListView> {
             itemCount: widget.foodAndConnect.length,
             itemBuilder: (context,index){
               return Padding(
-                padding: EdgeInsets.fromLTRB(20, 20, 20,0),
-                child: Card(
-                    color:Colors.grey[200],
-                    child: ListTile(
-                      onTap: (){
-                        setState(() {
-                          print(widget.foodAndConnect.length);
-                          return _showSettingsPanel(widget.foodAndConnect[index]);
-                        });
-                      },
-                      contentPadding: EdgeInsets.all(30),
+                padding: EdgeInsets.fromLTRB(20, 20, 20,20),
+                child: Container(
+                  height: 220,
+                  width:300,
+                  child: GestureDetector(
+                    onTap: (){
+                     _showSettingsPanel(widget.foodAndConnect[index]);
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                        color:Colors.black,
+                        //color:Colors.grey[200],
+                        child:Column(
+                          children: [
+                            Container(
+                              height:150,
+                                width:800,
+                              child:Image(
+                                  image: NetworkImage(widget.foodAndConnect[index].image),
+                                  fit:BoxFit.fitWidth
+                              )
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                      widget.foodAndConnect[index].title,
+                                      style:TextStyle(
+                                          fontSize: 25,
+                                          color: Colors.white
+                                      )
+                                  ),
+                                  Text(
+                                      "R${widget.foodAndConnect[index].price}0",
+                                      style:TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
 
-                      title:Text(
-                        widget.foodAndConnect[index].title ?? "No title",
-                        style:TextStyle(
-                          letterSpacing: 2,
-                          fontWeight: FontWeight.w300,
-
+                                      )
+                                  ),
+                                ],
+                              ),
+                            ),
+//                          Expanded(
+//                            child: Align(
+//                              alignment:Alignment.topLeft ,
+//                              child: Text(
+//                                  widget.foodAndConnect[index].title,
+//                                style:TextStyle(
+//                                  fontSize: 25,
+//                                  color: Colors.white
+//                                )
+//                              ),
+//                            ),
+//                          ),Expanded(
+//                            child: SizedBox(
+//                              height:5
+//                            ),
+//                          )
+//                          , Expanded(
+//                            child: Align(
+//                              alignment:Alignment.topLeft ,
+//                              child: Text(
+//                                  "R${widget.foodAndConnect[index].price}0",
+//                                  style:TextStyle(
+//                                      fontSize: 20,
+//                                      color: Colors.white,
+//
+//                                  )
+//                              ),
+//                            ),
+//                          ),
+                          ],
                         ),
 
 
 
-
-                      ),
-                      trailing:Image.network(widget.foodAndConnect[index].image),
-                      subtitle:Padding(
-                        padding: const EdgeInsets.only(top:30),
-                        child: Text(
-                          " R${widget.foodAndConnect[index].price}",
-                          style:TextStyle(
-                            letterSpacing: 2,
-                            fontWeight: FontWeight.w200,
-                          ),
-                        ),
-                      ),
-
-                    ),
-                    elevation: 0),
+                        elevation: 0),
+                  ),
+                ),
 
               );
             }

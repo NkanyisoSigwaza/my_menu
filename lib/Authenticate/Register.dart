@@ -22,51 +22,75 @@ class _RegisterState extends State<Register> {
     return registerState.loading
         ? Loading()
         : Scaffold(
-            backgroundColor: Colors.grey[100],
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(60),
-              child: AppBar(
-                backgroundColor: Colors.grey[400],
-                elevation: 0,
-                title: Text(
-                  "Sign up",
-                  style: TextStyle(
-                    letterSpacing: 2,
-                    color: Colors.black,
-                  ),
-                ),
-                centerTitle: true,
-                actions: <Widget>[
-                  FlatButton.icon(
-                    onPressed: () {
-                      widget.toggleView();
-                    },
-                    icon: Icon(
-                      Icons.person,
-                    ),
-                    label: Text(
-                      "Sign in",
-                      style: TextStyle(letterSpacing: 1.2),
-                    ),
-                  )
-                ],
-              ),
-            ),
+      resizeToAvoidBottomInset: false,
+            backgroundColor: Colors.black,
+//            appBar: PreferredSize(
+//              preferredSize: Size.fromHeight(60),
+//              child: AppBar(
+//                backgroundColor: Colors.grey[400],
+//                elevation: 0,
+//                title: Text(
+//                  "Sign up",
+//                  style: TextStyle(
+//                    letterSpacing: 2,
+//                    color: Colors.black,
+//                  ),
+//                ),
+//                centerTitle: true,
+//                actions: <Widget>[
+//                  FlatButton.icon(
+//                    onPressed: () {
+//                      widget.toggleView();
+//                    },
+//                    icon: Icon(
+//                      Icons.person,
+//                    ),
+//                    label: Text(
+//                      "Sign in",
+//                      style: TextStyle(letterSpacing: 1.2),
+//                    ),
+//                  )
+//                ],
+//              ),
+//            ),
             body: Container(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
               child: Form(
                 key: registerState.formKey,
                 child: Column(
                   children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 80, 0, 10),
+                      child: Container(
+                          child:Image(
+                            image:AssetImage(
+                                "Picture/delDocLogo.png"
+                            ),
+                          )
+                      ),
+                    ),
                     SizedBox(
                       height: 20,
                     ),
                     TextFormField(
-                      decoration:
-                          textInputDecoration.copyWith(hintText: "Email"),
-
+                      decoration: textInputDecoration.copyWith(hintText: "Name"),
+                      controller: registerState.name,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      decoration: textInputDecoration.copyWith(hintText: "Surname"),
+                      controller: registerState.surname,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      decoration: textInputDecoration.copyWith(hintText: "Email"),
+                      controller: registerState.emailValue,
                       validator: (val){
-                       return registerState.validateEmail(val);
+                        return registerState.validateEmail(val);
                       },
                       onChanged: (val) {
                         //returns a value each time the user types or deletes something
@@ -75,7 +99,17 @@ class _RegisterState extends State<Register> {
                         });
                       },
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      decoration: textInputDecoration.copyWith(hintText: "Phone"),
+                      controller: registerState.phone,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+
                     TextFormField(
                       decoration:
                           textInputDecoration.copyWith(hintText: "Password"),

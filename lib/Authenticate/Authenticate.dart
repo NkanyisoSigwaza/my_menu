@@ -2,6 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:mymenu/Authenticate/Register.dart';
 import 'package:mymenu/Authenticate/SignIn.dart';
+import 'package:mymenu/States/RegisterState.dart';
+import 'package:mymenu/States/SignInState.dart';
+import 'package:provider/provider.dart';
 
 class Authenticate extends StatefulWidget {
   @override
@@ -18,13 +21,19 @@ class _AuthenticateState extends State<Authenticate> {
   @override
   Widget build(BuildContext context) {
     if(showSignIn){
-      return Container(
-        child:SignIn(toggleView: toggleView),
+      return ChangeNotifierProvider.value(
+        value:SignInState(),
+        child: Container(
+          child:SignIn(toggleView: toggleView),
+        ),
       );
     }
     else{
-      return Container(
-        child:Register(toggleView: toggleView),
+      return ChangeNotifierProvider.value(
+        value:RegisterState(),
+        child: Container(
+          child:Register(toggleView: toggleView),
+        ),
       );
     }
 

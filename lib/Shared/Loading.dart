@@ -5,12 +5,24 @@ class Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color:Colors.grey[100],
-      child:Center(
-        child: SpinKitWave(
-          color: Colors.grey[400],
-          size: 50.0,
-        ),
+      color:Colors.black,
+      child:Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+              child:Image(
+                image:AssetImage(
+                    "Picture/delDocLogo.png"
+                ),
+              )
+          ),
+          Center(
+            child: SpinKitWave(
+              color: Colors.white,
+              size: 50.0,
+            ),
+          ),
+        ],
       ),
     );
   }

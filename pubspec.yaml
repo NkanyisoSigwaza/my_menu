@@ -28,7 +28,7 @@ dependencies:
 
   image_picker: ^0.6.0+17
   image_cropper: ^1.2.1
-  firebase_core: ^0.4.4+3
+
   firebase_storage: ^3.0.3
   fluttertoast: ^4.0.0
 
@@ -37,6 +37,10 @@ dependencies:
   http: ^0.12.1
 
   flutter_google_places: ^0.2.3
+  firebase_core: ^0.4.4
+  firebase_analytics: ^5.0.16
+  google_sign_in: ^4.5.3
+  carousel_slider: ^2.2.1
 
 
 
@@ -66,6 +70,7 @@ flutter:
   assets:
   - Picture/car_icon.png
   - Picture/avatar.png
+  - Picture/delDocLogo.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

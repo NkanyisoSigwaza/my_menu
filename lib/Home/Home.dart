@@ -5,141 +5,111 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
+import 'package:mymenu/Authenticate/Authenticate.dart';
 import 'package:mymenu/Authenticate/SignIn.dart';
-import 'package:mymenu/Home/Budget.dart';
+
 import 'package:mymenu/Home/CheckOut.dart';
 import 'package:mymenu/Maps/MyMap.dart';
 import 'package:mymenu/Models/FoodItem.dart';
+import 'package:mymenu/Models/Restuarant.dart';
+import 'package:mymenu/Navigate/Wrapper.dart';
 
 import 'package:mymenu/Shared/Database.dart';
 
 import 'package:mymenu/Shared/Loading.dart';
 import 'package:mymenu/Home/MyListView.dart';
+import 'package:mymenu/Shared/UserDrawer.dart';
+import 'package:mymenu/States/HomeState.dart';
 
 import 'package:provider/provider.dart';
+import "package:mymenu/Services/firebase_analytics.dart";
 
 import 'package:mymenu/VoucherHome/VoucherHome.dart';
 
 
 class Home extends StatefulWidget {
+
+  Restaurant restaurant;
+
+  Home({this.restaurant});
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  Auth _auth = Auth();
-  List<FoodItem> food;
 
-  List<FoodItem> pizza;
-  List<FoodItem> dessert;
-  List<FoodItem> drink;
-  int tab = 0;
   @override
   Widget build(BuildContext context) {
+//    analytics.logLogin();
+//    analytics.logEvent(name: "Restaurant Screen");
+  List<String> words = [
+    "one","two","three","four","five","one","two","three","four","five","one","two","three","four","five"
+  ];
 
-    final foodAndConnect = Provider.of<List<FoodItem>>(context); //?? [FoodItem(title:"none",price: 0.0,category: "none",id:"0",image:"https://cdn.pixabay.com/photo/2018/03/04/20/08/burger-3199088__340.jpg")];  // getting data from stream provider. ie there has been some change in the database
-    bool shouldLoad = foodAndConnect==null ? true:false; //false means data is ready
-
-
-
-
-    return  shouldLoad? Loading():Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: MyAppBar(),
-      drawer: Container(
-        margin: EdgeInsets.only(right:100),
-        color:Colors.white,
-        child: ListView(
-          children: <Widget>[
-            Container(
+    final foodItems = Provider.of<List<FoodItem>>(context);
+    final homeState = Provider.of<HomeState>(context);
 
 
-              height:300,
-              child: UserAccountsDrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.grey[400],
+
+    return  foodItems==null ? Loading():Scaffold(
+      //backgroundColor: Colors.grey[100],
+        backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(85),// makes app bar taller
+
+        child: Padding(
+          padding: const EdgeInsets.only(top:24),
+          child: Container(
+            child: AppBar(
+             //backgroundColor: Colors.red[500],
+              backgroundColor: Colors.white,
+
+              elevation: 0,
+              title:Text(
+                foodItems[0].restaurant,
+
+                style:TextStyle(
+                  color: Colors.black,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w300,
+                  wordSpacing: 2,
+                  letterSpacing: 2,
+
                 ),
 
-
-                accountName: Padding(
-                  padding: const EdgeInsets.only(bottom:12),
-                  child: Text("Nkanyiso"),
-                ),
-                accountEmail: Text("sgwnka001@myuct.ac.za"),
-                currentAccountPicture:CircleAvatar(
-                  radius:50,
-                  backgroundImage:AssetImage("Picture/avatar.png") ,
-                  backgroundColor: Colors.white,
-
-
-                ),
               ),
-            ),
-            ListTile(
-              title:Text("Budget"),
-              onTap: (){
-                Navigator.of(context).pop();//closes menu in home pAGE
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Budget())
-                );
-              },
-            ),
-            Divider(
-              height:5,
-              color:Colors.black,
-            ),
-            ListTile(
-              title:Text("Exchange Voucher"),
-              onTap: (){
-                Navigator.of(context).pop();//closes menu in home pAGE
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ImageCapture())
-                );
-              },
-            ),
-            Divider(
-              height:5,
-              color:Colors.black,
-            ),
-            ListTile(
-              title:Text("Sign out"),
-              onTap: (){
-                _auth.signOut();
-                Navigator.of(context).pop();//closes menu in home pAGE
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignIn())
-                );
+              centerTitle: true,
 
-              },
             ),
-            Divider(
-              height:5,
-              color:Colors.black,
-            ),
-          ],
+          ),
         ),
+
       ),
+      drawer:UserDrawer(),
       body:Column(
         children: <Widget>[
           Container(
             //margin:EdgeInsets.only(top:10),
               padding: EdgeInsets.only(top:10),
-              color:Colors.grey[400],
+             // color:Colors.grey[400],
               child:Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  FlatButton(
-                    onPressed: ()async{
-                      tab  =0;
-                      //print("yeah");
-                      food= await Database().test();
-                      print(food);
-                      setState(() {
+                  OutlineButton(
 
-                      });
+                    borderSide: BorderSide(
+                        color:Colors.grey
+                    ),
+
+                    shape:RoundedRectangleBorder(
+
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    onPressed: ()async{
+                      homeState.tab =0;
+                      //print("yeah");
+                      homeState.food= await Database().test();
+
                     },
                     child:Text(
                         "Burgers",
@@ -150,47 +120,17 @@ class _HomeState extends State<Home> {
 
                     ),
                   ),
-                  FlatButton(
-                    onPressed: (){
-                      tab=1;
-                  Firestore.instance.collection("Food and Connect")
-                  .where("category",isEqualTo:"pizza")
-                  .getDocuments()
-                  .then((QuerySnapshot docs){
-                  if(docs.documents.isNotEmpty) {
-                    pizza = [];
+                  OutlineButton(
+                    borderSide: BorderSide(
+                        color:Colors.grey
+                    ),
 
+                    shape:RoundedRectangleBorder(
 
-                  for(int i =0;i<docs.documents.length;i++){
-                    pizza.add(
-
-                        FoodItem(
-                            title :docs.documents[i].data["title"]?? "no",
-                            image:docs.documents[i].data["image"] ?? "https://cdn.pixabay.com/photo/2018/03/04/20/08/burger-3199088__340.jpg",
-                            price : docs.documents[i].data["price"] ?? 0,
-                            id : docs.documents[i].data["id"] ?? "ai",
-                            category :docs.documents[i].data["category"] ?? "nja"
-                        )
-                    );
-
-                    print(docs.documents[i].data["title"]?? "no");
-                   setState(() {
-//                     Navigator.push(
-//                         context,
-//                         MaterialPageRoute(builder: (context) => MyListView(foodAndConnect:foods))
-//                     );
-                   });
-
-                  }
-
-
-                  }
-                  else{
-                  print("nah its empty bro!");
-
-                  }
-                  });
-
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    onPressed: ()async{
+                    await homeState.showPizza();
                   },
                     child:Text(
                         "Pizza",
@@ -200,48 +140,18 @@ class _HomeState extends State<Home> {
 
                     ),
                   ),
-                  FlatButton(
-                    onPressed: (){
+                  OutlineButton(
+                    borderSide: BorderSide(
+                        color:Colors.grey
+                    ),
 
-                      tab=2;
-                      Firestore.instance.collection("Food and Connect")
-                          .where("category",isEqualTo:"drink")
-                          .getDocuments()
-                          .then((QuerySnapshot docs){
-                        if(docs.documents.isNotEmpty) {
-                          drink= [];
+                    shape:RoundedRectangleBorder(
 
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    onPressed: ()async{
 
-                          for(int i =0;i<docs.documents.length;i++){
-                            drink.add(
-
-                                FoodItem(
-                                    title :docs.documents[i].data["title"]?? "no",
-                                    image:docs.documents[i].data["image"] ?? "https://cdn.pixabay.com/photo/2018/03/04/20/08/burger-3199088__340.jpg",
-                                    price : docs.documents[i].data["price"] ?? 0,
-                                    id : docs.documents[i].data["id"] ?? "ai",
-                                    category :docs.documents[i].data["category"] ?? "nja"
-                                )
-                            );
-
-                            print(docs.documents[i].data["title"]?? "no");
-                            setState(() {
-//                     Navigator.push(
-//                         context,
-//                         MaterialPageRoute(builder: (context) => MyListView(foodAndConnect:foods))
-//                     );
-                            });
-
-                          }
-
-
-                        }
-                        else{
-                          print("nah its empty bro!");
-
-                        }
-                      });
-
+                      await homeState.showDrinks();
                     },
                     child:Text(
                         "Drinks",
@@ -252,46 +162,17 @@ class _HomeState extends State<Home> {
                     ),
 
                   ),
-                  FlatButton(
-                    onPressed: (){
-                      tab=3;
-                      Firestore.instance.collection("Food and Connect")
-                          .where("category",isEqualTo:"dessert")
-                          .getDocuments()
-                          .then((QuerySnapshot docs){
-                        if(docs.documents.isNotEmpty) {
-                          dessert= [];
+                  OutlineButton(
+                    borderSide: BorderSide(
+                        color:Colors.grey
+                    ),
 
+                    shape:RoundedRectangleBorder(
 
-                          for(int i =0;i<docs.documents.length;i++){
-                            dessert.add(
-
-                                FoodItem(
-                                    title :docs.documents[i].data["title"]?? "no",
-                                    image:docs.documents[i].data["image"] ?? "https://cdn.pixabay.com/photo/2018/03/04/20/08/burger-3199088__340.jpg",
-                                    price : docs.documents[i].data["price"] ?? 0,
-                                    id : docs.documents[i].data["id"] ?? "ai",
-                                    category :docs.documents[i].data["category"] ?? "nja"
-                                )
-                            );
-
-                            print(docs.documents[i].data["title"]?? "no");
-                            setState(() {
-//                     Navigator.push(
-//                         context,
-//                         MaterialPageRoute(builder: (context) => MyListView(foodAndConnect:foods))
-//                     );
-                            });
-
-                          }
-
-
-                        }
-                        else{
-                          print("nah its empty bro!");
-
-                        }
-                      });
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    onPressed: ()async{
+                      await homeState.showDessert();
                     },
                     child:Text(
                       "Dessert",
@@ -306,46 +187,70 @@ class _HomeState extends State<Home> {
                 ],
               )
           ),
-          if(tab==0)
-            MyListView(foodAndConnect: foodAndConnect),
+          Container(
+            height: 50,
+            width: 600,
+            child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: widget.restaurant.categories.length,
+                itemBuilder: (context,index){
+                return GestureDetector(
+                  child: Card(
+                    child:Text(widget.restaurant.categories[index])
+                  ),
+                  onTap: ()async{
+                   await homeState.category(widget.restaurant.restaurantName, widget.restaurant.categories[index]);
+                  },
+                );
+                }),
+          ),
+        SizedBox(
+          height:10
+        ),
+          if(homeState.tab==0)
+            MyListView(foodAndConnect: foodItems),
 
-          if(tab==1)
-            MyListView(foodAndConnect: pizza),
+          if(homeState.tab==1)
+            MyListView(foodAndConnect: homeState.selectedCategory),
 
-          if(tab==2)
-            MyListView(foodAndConnect: drink),
+          if(homeState.tab==2)
+            MyListView(foodAndConnect: homeState.drinks),
 
-          if(tab==3)
-            MyListView(foodAndConnect: dessert),
+          if(homeState.tab==3)
+            MyListView(foodAndConnect: homeState.desserts),
 
           Container(
-            color:Colors.grey[500],
+            width:165,
+            //color:Colors.grey[500],
+            color: Colors.black,
             //height:50,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Expanded(
+                FlatButton(
+                  onPressed: (){
+                    setState(() {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CheckOut())
+                      );
+                    });
+                  },
+                  child:Text(
+                    "Check Out",
+                    style:TextStyle(
+                      fontSize: 20,
 
-                  child: FlatButton(
-                    onPressed: (){
-                      setState(() {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => CheckOut())
-                        );
-                      });
-                    },
-                    child:Text(
-                      "Check Out",
-                      style:TextStyle(
-                        //color: Colors.white,
-                        letterSpacing: 2,
-                      ),
-
+                      letterSpacing: 2,
+                      color: Colors.white
                     ),
-                    color: Colors.grey[500],
-
 
                   ),
+                  color: Colors.red[900],
+
+
+
                 ),
               ],
             ),
@@ -361,46 +266,5 @@ class _HomeState extends State<Home> {
   }
 }
 
-Widget MyAppBar(){
 
-  return(
-      PreferredSize(
-           preferredSize: Size.fromHeight(60),// makes app bar taller
-
-           child: AppBar(
-              backgroundColor: Colors.grey[300],
-//              leading:IconButton(
-//
-//              onPressed: (){
-//
-//              },
-//              icon:Icon(
-//                  Icons.menu,
-//                   size:30,
-//
-//              ),
-//              color: Colors.black,
-//              ),
-
-              elevation: 0,
-              title:Text(
-                "Food and Connect",
-
-                  style:TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      wordSpacing: 2,
-                      letterSpacing: 2,
-
-                    ),
-
-              ),
-              centerTitle: true,
-              titleSpacing: 10,
-      ),
-
-  )
-  );
-}
 
