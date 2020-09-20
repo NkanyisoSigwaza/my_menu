@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mymenu/Models/ConfirmCheckOut.dart';
 import 'package:mymenu/Models/FoodItem.dart';
 import 'package:mymenu/Models/Order.dart';
@@ -11,6 +12,7 @@ import 'package:mymenu/Models/User.dart';
 
 class Auth{
   //allows us to use firebase authentication -- line below
+
   final FirebaseAuth _auth = FirebaseAuth.instance;  //_ means private in variable auth
 
   String uid;

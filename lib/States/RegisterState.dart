@@ -12,6 +12,11 @@ class RegisterState with ChangeNotifier {
   String email = "";
   String password = "";
   final FirebaseAuth _auth= FirebaseAuth.instance;
+  TextEditingController name = TextEditingController();
+  TextEditingController surname = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController emailValue = TextEditingController();
+
 
   //GETTERS
   GlobalKey<FormState> get formKey => _formKey;

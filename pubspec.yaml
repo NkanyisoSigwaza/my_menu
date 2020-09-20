@@ -39,6 +39,7 @@ dependencies:
   flutter_google_places: ^0.2.3
   firebase_core: ^0.4.4
   firebase_analytics: ^5.0.16
+  google_sign_in: ^4.5.3
 
 
 
@@ -68,6 +69,7 @@ flutter:
   assets:
   - Picture/car_icon.png
   - Picture/avatar.png
+  - Picture/delDocLogo.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

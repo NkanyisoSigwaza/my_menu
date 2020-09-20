@@ -11,6 +11,7 @@ class Price{
  double calculatePrice(List<ConfirmCheckOut> orders) {
    price = 0;
     for (ConfirmCheckOut order in orders) {
+
       price += order.quantity * order.price;
   }
     return price;
