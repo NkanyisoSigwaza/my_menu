@@ -169,39 +169,59 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
             ),
-            FlatButton(
-                onPressed: ()async{
-                  await singInState.handleGoogleSignIn();
-                },
-                child:Text(
-                    "Log in with google",
-                  style: TextStyle(
-                    color:Colors.green
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height:MediaQuery.of(context).size.height*0.03,
+                  width:MediaQuery.of(context).size.height*0.03,
+                  child: Image(
+                    image: NetworkImage("https://www.duupdates.in/wp-content/uploads/2020/07/google.jpg"),
                   ),
-                )
+                ),
+                FlatButton(
+                    height:MediaQuery.of(context).size.height*0.03,
+                    //color: Colors.white,
+                    onPressed: ()async{
+                      await singInState.handleGoogleSignIn();
+                    },
+                    child:Text(
+                      "Sign in with Google",
+                      style: TextStyle(
+                          color:Colors.white
+                      ),
+                    )
+                ),
+              ],
             ),
-            FlatButton(
-                onPressed: ()async{
-                  await singInState.signInFB();
-                },
-                child:Text(
-                  "Sign in with facebook",
-                  style: TextStyle(
-                      color:Colors.red
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height:MediaQuery.of(context).size.height*0.03,
+                  width:MediaQuery.of(context).size.height*0.03,
+                  child: Image(
+                    image: NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Facebook_logo_36x36.svg/600px-Facebook_logo_36x36.svg.png"),
                   ),
-                )
+                ),
+                FlatButton(
+                  height:MediaQuery.of(context).size.height*0.03,
+                  //color: Colors.white,
+                    onPressed: ()async{
+                      await singInState.signInFB();
+                    },
+                    child:Text(
+                      "Sign in with facebook",
+                      style: TextStyle(
+                          color:Colors.blue[800]
+                      ),
+                    )
+                ),
+              ],
             ),
-            FlatButton(
-                onPressed: ()async{
-                 // await singInState.fbLogin.logOut().then((value) => print("logged outttt"));
-                },
-                child:Text(
-                  "log out",
-                  style: TextStyle(
-                      color:Colors.red
-                  ),
-                )
-            )
+
+
           ],
         ),
       ),
