@@ -24,35 +24,7 @@ class _RegisterState extends State<Register> {
         : Scaffold(
       resizeToAvoidBottomInset: false,
             backgroundColor: Colors.black,
-//            appBar: PreferredSize(
-//              preferredSize: Size.fromHeight(60),
-//              child: AppBar(
-//                backgroundColor: Colors.grey[400],
-//                elevation: 0,
-//                title: Text(
-//                  "Sign up",
-//                  style: TextStyle(
-//                    letterSpacing: 2,
-//                    color: Colors.black,
-//                  ),
-//                ),
-//                centerTitle: true,
-//                actions: <Widget>[
-//                  FlatButton.icon(
-//                    onPressed: () {
-//                      widget.toggleView();
-//                    },
-//                    icon: Icon(
-//                      Icons.person,
-//                    ),
-//                    label: Text(
-//                      "Sign in",
-//                      style: TextStyle(letterSpacing: 1.2),
-//                    ),
-//                  )
-//                ],
-//              ),
-//            ),
+
             body: Container(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
               child: Form(
@@ -70,21 +42,27 @@ class _RegisterState extends State<Register> {
                       ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: MediaQuery.of(context).size.height*0.01,
                     ),
                     TextFormField(
                       decoration: textInputDecoration.copyWith(hintText: "Name"),
                       controller: registerState.name,
+                      validator: (name){
+                        return registerState.validateName(name);
+                      },
                     ),
                     SizedBox(
-                      height: 20,
+                      height: MediaQuery.of(context).size.height*0.01,
                     ),
                     TextFormField(
                       decoration: textInputDecoration.copyWith(hintText: "Surname"),
                       controller: registerState.surname,
+                      validator: (surname){
+                        return registerState.validateSurname(surname);
+                      },
                     ),
                     SizedBox(
-                      height: 20,
+                      height: MediaQuery.of(context).size.height*0.01,
                     ),
                     TextFormField(
                       decoration: textInputDecoration.copyWith(hintText: "Email"),
@@ -100,21 +78,25 @@ class _RegisterState extends State<Register> {
                       },
                     ),
                     SizedBox(
-                      height: 20,
+                      height: MediaQuery.of(context).size.height*0.01,
                     ),
                     TextFormField(
-                      decoration: textInputDecoration.copyWith(hintText: "Phone"),
-                      controller: registerState.phone,
+                      decoration: textInputDecoration.copyWith(hintText: "Password"),
+                      controller: registerState.passwordOriginal,
+                      validator: (password){
+                        return registerState.validatePassword(password);
+                      },
                     ),
                     SizedBox(
-                      height: 20,
+                      height: MediaQuery.of(context).size.height*0.01,
                     ),
 
                     TextFormField(
                       decoration:
-                          textInputDecoration.copyWith(hintText: "Password"),
+                          textInputDecoration.copyWith(hintText: "Confirm Password"),
+                      controller: registerState.passwordConfirm,
                       validator: (val) {
-                       return registerState.validatePassword(val);
+                       return registerState.confirmPassword(val);
                       },
                       obscureText: true, // encrypts password
                       onChanged: (val) {

@@ -165,7 +165,7 @@ class _SignInState extends State<SignIn> {
               child:Text(
                 "Don't have an account? Register",
                 style:TextStyle(
-                  color:Colors.white,
+                  color:Colors.green,
                 ),
               ),
             ),
@@ -198,11 +198,14 @@ class _SignInState extends State<SignIn> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  height:MediaQuery.of(context).size.height*0.03,
-                  width:MediaQuery.of(context).size.height*0.03,
-                  child: Image(
-                    image: NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Facebook_logo_36x36.svg/600px-Facebook_logo_36x36.svg.png"),
+                Padding(
+                  padding: const EdgeInsets.only(left:15.0),
+                  child: Container(
+                    height:MediaQuery.of(context).size.height*0.03,
+                    width:MediaQuery.of(context).size.height*0.03,
+                    child: Image(
+                      image: NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Facebook_logo_36x36.svg/600px-Facebook_logo_36x36.svg.png"),
+                    ),
                   ),
                 ),
                 FlatButton(
