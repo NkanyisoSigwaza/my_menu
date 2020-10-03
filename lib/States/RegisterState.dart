@@ -119,6 +119,7 @@ class RegisterState with ChangeNotifier {
             "surname":surname.text,
             "email":email,
             "user":"Customer",
+            "date":DateTime.now()
 
           });
 
@@ -128,6 +129,8 @@ class RegisterState with ChangeNotifier {
     }
     notifyListeners();
   }
+
+
 
   // Returns user object which contains firebaseID
   User _userFromFireBaseUser(FirebaseUser user){

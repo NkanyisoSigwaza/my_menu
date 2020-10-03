@@ -1,6 +1,7 @@
 
 
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
 
@@ -90,6 +91,7 @@ class SignInState with ChangeNotifier {
   Future<FirebaseUser> handleGoogleSignIn() async {
     // hold the instance of the authenticated user
     FirebaseUser user;
+    bool new_user = true;
     // flag to check whether we're signed in already
     bool isSignedIn = await _googleSignIn.isSignedIn();
     if (isSignedIn) {
@@ -103,6 +105,7 @@ class SignInState with ChangeNotifier {
       await _googleSignIn.signIn();
       final GoogleSignInAuthentication googleAuth =
       await googleUser.authentication;
+
       // get the credentials to (access / id token)
       // to sign in via Firebase Authentication
       final AuthCredential credential =
@@ -114,9 +117,32 @@ class SignInState with ChangeNotifier {
     }
 
     if (user!=null){
-      print(user.email);
-      print(user.displayName);
-      print(user.uid);
+      String uid = await Auth().inputData();
+
+      await Firestore.instance.collection("Users").snapshots().forEach((element) {
+        // checks if user is already on database
+        element.documents.forEach((element) {
+
+          if(uid ==element.documentID){
+            new_user = false;
+          }
+        });
+      });
+
+
+
+      if(new_user){
+
+        await Firestore.instance.collection("Users").document(uid).setData({
+
+
+          "name":user.displayName,
+          "email":user.email,
+          "user":"Customer",
+          "date":DateTime.now()
+
+        });
+      }
     }
 
     return user;
