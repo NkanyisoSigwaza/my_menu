@@ -1,3 +1,6 @@
+//import 'dart:html';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
@@ -106,6 +109,20 @@ class RegisterState with ChangeNotifier {
         error = "please supply a valid email";
       }
       else{
+
+        // loads user data to database every time new user registers
+          String uid = await Auth().inputData();
+          return await Firestore.instance.collection("Users").document(uid).setData({
+
+
+            "name":name.text,
+            "surname":surname.text,
+            "email":email,
+            "user":"Customer",
+
+          });
+
+
 
       }
     }
