@@ -37,12 +37,14 @@ class Main extends StatefulWidget {
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
 
+
   Main({this.analytics,this.observer });
   @override
   _MainState createState() => _MainState();
 }
 
 class _MainState extends State<Main> {
+
 
   Future _sendAnalytics()async{
     await widget.analytics.logEvent(

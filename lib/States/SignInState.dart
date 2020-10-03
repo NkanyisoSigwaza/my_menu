@@ -1,5 +1,12 @@
+
+
+import 'dart:convert';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
 import 'package:mymenu/Models/User.dart';
@@ -12,6 +19,7 @@ class SignInState with ChangeNotifier {
   String error = "";
   String email = "";
   String password = "";
+
 
   //GETTERS
   GlobalKey<FormState> get formKey => _formKey;
@@ -79,7 +87,7 @@ class SignInState with ChangeNotifier {
   }
 
 
-  Future<FirebaseUser> _handleGoogleSignIn() async {
+  Future<FirebaseUser> handleGoogleSignIn() async {
     // hold the instance of the authenticated user
     FirebaseUser user;
     // flag to check whether we're signed in already
@@ -87,6 +95,8 @@ class SignInState with ChangeNotifier {
     if (isSignedIn) {
       // if so, return the current user
       user = await _auth.currentUser();
+      await _googleSignIn.signOut();
+
     }
     else {
       final GoogleSignInAccount googleUser =
@@ -103,8 +113,69 @@ class SignInState with ChangeNotifier {
       user = (await _auth.signInWithCredential(credential)).user;
     }
 
+    if (user!=null){
+      print(user.email);
+      print(user.displayName);
+      print(user.uid);
+    }
+
     return user;
   }
+
+  /// This mehtod makes the real auth
+  Future<FirebaseUser> firebaseAuthWithFacebook({@required FacebookAccessToken token}) async {
+
+    AuthCredential credential= FacebookAuthProvider.getCredential(accessToken: token.token);
+   dynamic user = await _auth.signInWithCredential(credential);
+    return user;
+  }
+
+  Future signInFB() async {
+    final fbLogin = new FacebookLogin();
+    print(fbLogin.isLoggedIn);
+    FacebookLoginResult result = await fbLogin.logIn(["email"]);
+
+
+
+    final String token = result.accessToken.token;
+
+    final response = await http.get('https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${token}');
+    final profile = jsonDecode(response.body);
+    print(profile);
+    print("NkaaaaaaaaaH:${result.status}");
+    //return profile;
+
+
+    switch (result.status) {
+      case FacebookLoginStatus.loggedIn:
+
+        final FacebookAccessToken facebookAccessToken = result.accessToken;
+
+        var firebaseUser = await firebaseAuthWithFacebook(
+            token: facebookAccessToken);
+
+        print('''
+         Logged in!
+         
+         Token: ${facebookAccessToken.token}
+         User id: ${facebookAccessToken.userId}
+         Expires: ${facebookAccessToken.expires}
+         Permissions: ${facebookAccessToken.permissions}
+         Declined permissions: ${facebookAccessToken.declinedPermissions}
+         ''');
+        break;
+      case FacebookLoginStatus.cancelledByUser:
+        print('Login cancelled by the user.');
+        break;
+      case FacebookLoginStatus.error:
+        print('Something went wrong with the login process.\n'
+            'Here\'s the error Facebook gave us: ${result.errorMessage}');
+        break;
+    }
+    return profile;
+  }
+
+
 
 
 

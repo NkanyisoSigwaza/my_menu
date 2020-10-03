@@ -169,6 +169,39 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
             ),
+            FlatButton(
+                onPressed: ()async{
+                  await singInState.handleGoogleSignIn();
+                },
+                child:Text(
+                    "Log in with google",
+                  style: TextStyle(
+                    color:Colors.green
+                  ),
+                )
+            ),
+            FlatButton(
+                onPressed: ()async{
+                  await singInState.signInFB();
+                },
+                child:Text(
+                  "Sign in with facebook",
+                  style: TextStyle(
+                      color:Colors.red
+                  ),
+                )
+            ),
+            FlatButton(
+                onPressed: ()async{
+                 // await singInState.fbLogin.logOut().then((value) => print("logged outttt"));
+                },
+                child:Text(
+                  "log out",
+                  style: TextStyle(
+                      color:Colors.red
+                  ),
+                )
+            )
           ],
         ),
       ),
