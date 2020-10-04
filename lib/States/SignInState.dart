@@ -117,19 +117,22 @@ class SignInState with ChangeNotifier {
     }
 
     if (user!=null){
-      String uid = await Auth().inputData();
+      dynamic uid = await Auth().inputData();
+      print("hey man this is your userID $uid");
 
-      await Firestore.instance.collection("Users").snapshots().forEach((element) {
+       Firestore.instance.collection("Users").snapshots().forEach((element) {
+
         // checks if user is already on database
-        element.documents.forEach((element) {
+        element.documents.forEach((document) {
 
-          if(uid ==element.documentID){
+          if(uid ==document.documentID){
             new_user = false;
+            print("________is the user new_______________ $new_user");
           }
         });
       });
 
-
+      await Future.delayed(const Duration(seconds: 1), () => "1");
 
       if(new_user){
 
@@ -149,7 +152,7 @@ class SignInState with ChangeNotifier {
   }
 
   /// This mehtod makes the real auth
-  Future<FirebaseUser> firebaseAuthWithFacebook({@required FacebookAccessToken token}) async {
+  Future firebaseAuthWithFacebook({@required FacebookAccessToken token}) async {
 
     AuthCredential credential= FacebookAuthProvider.getCredential(accessToken: token.token);
    dynamic user = await _auth.signInWithCredential(credential);
@@ -157,6 +160,7 @@ class SignInState with ChangeNotifier {
   }
 
   Future signInFB() async {
+    bool new_facebook_user = true;
     final fbLogin = new FacebookLogin();
     print(fbLogin.isLoggedIn);
     FacebookLoginResult result = await fbLogin.logIn(["email"]);
@@ -177,18 +181,37 @@ class SignInState with ChangeNotifier {
 
         final FacebookAccessToken facebookAccessToken = result.accessToken;
 
-        var firebaseUser = await firebaseAuthWithFacebook(
+        await firebaseAuthWithFacebook(
             token: facebookAccessToken);
 
-        print('''
-         Logged in!
-         
-         Token: ${facebookAccessToken.token}
-         User id: ${facebookAccessToken.userId}
-         Expires: ${facebookAccessToken.expires}
-         Permissions: ${facebookAccessToken.permissions}
-         Declined permissions: ${facebookAccessToken.declinedPermissions}
-         ''');
+        dynamic uid = await Auth().inputData();
+
+        Firestore.instance.collection("Users").snapshots().forEach((element) {
+
+          // checks if user is already on database
+          element.documents.forEach((document) {
+
+            if(uid ==document.documentID){
+              new_facebook_user = false;
+            }
+          });
+        });
+
+        await Future.delayed(const Duration(seconds: 1), () => "1");
+
+        if(new_facebook_user){
+
+          await Firestore.instance.collection("Users").document(uid).setData({
+
+
+            "name":profile["name"],
+            "email":profile["email"],
+            "user":"Customer",
+            "date":DateTime.now()
+
+          });
+        }
+
         break;
       case FacebookLoginStatus.cancelledByUser:
         print('Login cancelled by the user.');
