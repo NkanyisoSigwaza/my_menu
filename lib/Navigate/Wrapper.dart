@@ -6,6 +6,7 @@ import 'package:mymenu/Home/Options.dart';
 import 'package:mymenu/Models/User.dart';
 import 'package:mymenu/Navigate/Director.dart';
 import 'package:mymenu/Shared/Database.dart';
+import 'package:mymenu/States/OptionsState.dart';
 import 'package:mymenu/States/RestaurantState.dart';
 import 'package:mymenu/States/UserDrawerState.dart';
 import 'package:provider/provider.dart';
@@ -28,8 +29,10 @@ class Wrapper extends StatelessWidget {
       return MultiProvider(
         providers: [
           StreamProvider.value(
-          value: RestaurantState().numberRestaurants()),
+          value: RestaurantState().numberRestaurants()
+          ),
           ChangeNotifierProvider.value(value: UserDrawerState()),
+          ChangeNotifierProvider.value(value: OptionsState()),
         ],
         child: Options(),
       );

@@ -2,6 +2,7 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
@@ -32,7 +33,8 @@ class CheckOutState with ChangeNotifier{
               title: snapshot[element]["title"],
               price:snapshot[element]["price"],
               quantity: snapshot[element]["quantity"],
-              time: snapshot[element]["date"]
+              time: snapshot[element]["date"],
+              restaurant:snapshot[element]["restaurant"]
           ));
 
 
@@ -60,6 +62,13 @@ class CheckOutState with ChangeNotifier{
 
   checkOutApproved(List<ConfirmCheckOut> orders) async{
     for(int i =0;i<orders.length;i++){
+      FirebaseAnalytics().logEvent(name: "OrderPlaced",parameters: {
+        "title":orders[i].title,
+        "price":orders[i].price,
+        "restaurant":orders[i].restaurant,
+        "date":orders[i].time,
+        "quantity":orders[i].quantity
+      });
       await Auth().checkOutApproved(orders[i]);
     }
   }
@@ -79,7 +88,7 @@ class CheckOutState with ChangeNotifier{
 
   double calculateTotal(List<ConfirmCheckOut> ordersSelected){
     try {
-      print(orders.length);
+
       return double.parse(
           (price.calculatePrice(ordersSelected))
               .toStringAsFixed(2));
@@ -88,5 +97,6 @@ class CheckOutState with ChangeNotifier{
 
     }
   }
+
 
 }

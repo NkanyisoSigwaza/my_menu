@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import 'package:mymenu/Authenticate/Auth.dart';
 import 'package:mymenu/Models/Customer.dart';
 import 'package:mymenu/Navigate/Wrapper.dart';
+import 'package:mymenu/Shared/Constants.dart';
 import 'package:mymenu/Shared/Loading.dart';
 import 'package:mymenu/States/UserDrawerState.dart';
 import 'package:provider/provider.dart';
@@ -21,13 +22,14 @@ class _UserDrawerState extends State<UserDrawer> {
     super.initState();
     UserDrawerState().customerInfo().then((value){
       customer = value;
-      print(value.name);
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final userDrawerState = Provider.of<UserDrawerState>(context);
+    userDrawerState.logUser();
     return Container(
       margin: EdgeInsets.only(right:80),
       color:Colors.grey[800],
@@ -82,6 +84,76 @@ class _UserDrawerState extends State<UserDrawer> {
             height:5,
             color:Colors.black,
           ),
+
+          TextFormField(
+            controller: userDrawerState.promoCode,
+            decoration:textInputDecoration.copyWith(hintText: "Enter Promo code")
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text(
+                userDrawerState.validPromo ?? "",
+              style: TextStyle(
+                color: Colors.amber,
+                fontSize: 15
+              ),
+            ),
+          ),
+          FlatButton(
+            onPressed: ()async{
+              //userDrawerState.findPromos();
+              userDrawerState.verifyPromo();
+            },
+            child: Text("Submit"),
+          ),
+          FlatButton(
+              onPressed: (){
+                return showDialog<void>(
+                  context: context,
+                  barrierDismissible: false, // user must tap button!
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('AlertDialog Title'),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[
+                            Text('What is your occupation?'),
+
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+
+                        TextButton(
+                          child: Text('In school'),
+                          onPressed: () {
+                            userDrawerState.setOccupation('In school');
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: Text('In varsity'),
+                          onPressed: () {
+                            userDrawerState.setOccupation('In varsity');
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: Text('Working'),
+                          onPressed: () {
+                            userDrawerState.setOccupation('Working');
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Text(
+                "show dialog"
+              ))
 
         ],
       ),
