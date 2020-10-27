@@ -8,8 +8,9 @@ class ConfirmCheckOut{
   double price;
   Timestamp time;
   int quantity;
+  String restaurant;
 
-  ConfirmCheckOut({this.title,this.price,this.quantity,this.time});
+  ConfirmCheckOut({this.title,this.price,this.quantity,this.time,this.restaurant});
 
 
 

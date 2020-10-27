@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
 import 'package:mymenu/Home/Home.dart';
 import 'package:mymenu/Home/Options.dart';
+import 'package:mymenu/Home/Resturants.dart';
 import 'package:mymenu/Maps/Models/LocationN.dart';
 import 'package:mymenu/Maps/State/AppState.dart';
 import 'package:mymenu/Models/FoodItem.dart';
@@ -14,6 +15,7 @@ import 'package:mymenu/States/DescriptionState.dart';
 import 'package:mymenu/States/HomeState.dart';
 import 'package:mymenu/States/RegisterState.dart';
 import 'package:mymenu/States/RestaurantState.dart';
+import 'package:mymenu/States/UserDrawerState.dart';
 import 'package:provider/provider.dart';
 
 
@@ -48,16 +50,22 @@ class _DirectorState extends State<Director> {
         ChangeNotifierProvider.value(value: AppState()),
         ChangeNotifierProvider.value(value: HomeState()),
         ChangeNotifierProvider.value(value: DescriptionState()),
+        ChangeNotifierProvider.value(value: RegisterState()),
+        ChangeNotifierProvider.value(value: UserDrawerState()),
+        StreamProvider<List<Restaurant>>.value(
+            value: RestaurantState().numberRestaurants()),
+
+
         StreamProvider<List<LocationN>>.value(value:Database().DriverLocation()),
 
 
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Home(
-          restaurant:widget.restaurant
-        ),
-     // home:Options(),
+        // home: Home(
+        //   restaurant:widget.restaurant
+        // ),
+     home:Home(restaurant:widget.restaurant),
       ),
     );
 

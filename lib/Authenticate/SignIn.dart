@@ -165,10 +165,66 @@ class _SignInState extends State<SignIn> {
               child:Text(
                 "Don't have an account? Register",
                 style:TextStyle(
-                  color:Colors.white,
+                  color:Colors.green,
                 ),
               ),
             ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height:MediaQuery.of(context).size.height*0.03,
+                  width:MediaQuery.of(context).size.height*0.03,
+                  child: Image(
+                    image: NetworkImage("https://www.duupdates.in/wp-content/uploads/2020/07/google.jpg"),
+                  ),
+                ),
+                FlatButton(
+                    height:MediaQuery.of(context).size.height*0.03,
+                    //color: Colors.white,
+                    onPressed: ()async{
+                      await singInState.handleGoogleSignIn();
+                    },
+                    child:Text(
+                      "Sign in with Google",
+                      style: TextStyle(
+                          color:Colors.white
+                      ),
+                    )
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left:15.0),
+                  child: Container(
+                    height:MediaQuery.of(context).size.height*0.03,
+                    width:MediaQuery.of(context).size.height*0.03,
+                    child: Image(
+                      image: NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Facebook_logo_36x36.svg/600px-Facebook_logo_36x36.svg.png"),
+                    ),
+                  ),
+                ),
+                FlatButton(
+                  height:MediaQuery.of(context).size.height*0.03,
+                  //color: Colors.white,
+                    onPressed: ()async{
+                      await singInState.signInFB();
+                    },
+                    child:Text(
+                      "Sign in with facebook",
+                      style: TextStyle(
+                          color:Colors.blue[800]
+                      ),
+                    )
+                ),
+              ],
+            ),
+
+
           ],
         ),
       ),

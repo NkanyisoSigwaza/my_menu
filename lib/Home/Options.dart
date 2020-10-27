@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mymenu/Models/Option.dart';
+import 'package:mymenu/Models/Restuarant.dart';
+import 'package:mymenu/Navigate/Director.dart';
 import 'package:mymenu/Shared/Loading.dart';
 import 'package:mymenu/Shared/UserDrawer.dart';
+import 'package:mymenu/States/OptionsState.dart';
 import 'package:mymenu/States/RestaurantState.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +23,7 @@ class _OptionsState extends State<Options> {
   ];
   @override
   Widget build(BuildContext context) {
+    final optionsState = Provider.of<OptionsState>(context);
     return Scaffold(
       drawer: UserDrawer(),
       appBar: PreferredSize(
@@ -93,12 +97,18 @@ class _OptionsState extends State<Options> {
                                 ),
                                 onTap: (){
                                   setState(() {
+                                    optionsState.logOptionScreen(options[index].category);
     if(options[index].category=="Food") {
 
-    Navigator.push(context,MaterialPageRoute(builder: (context)=>StreamProvider.value(
-    value: RestaurantState().numberRestaurants(),
-    child: Resturants()
-    )));
+
+    Navigator.push(context,MaterialPageRoute(builder: (context){
+      return MultiProvider(
+        providers:[StreamProvider<List<Restaurant>>.value(
+            value: RestaurantState().numberRestaurants(),
+        ),
+          ChangeNotifierProvider.value(value: RestaurantState())],
+        child: Resturants(),
+      );}));
 //                                      return StreamProvider.value(
 //                                          value: RestaurantState().numberRestaurants(),
 //                                          child: Resturants()

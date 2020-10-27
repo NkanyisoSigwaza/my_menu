@@ -41,6 +41,16 @@ class _CheckOutState extends State<CheckOut> {
     });
   }
 
+  // void _showSettingsPanel(){
+  //   showModalBottomSheet(context: context, builder:(context){
+  //     //builder shows widget tree to display in bottom sheet
+  //     return Container(
+  //       padding:EdgeInsets.symmetric(vertical: 20,horizontal: 60),
+  //       child:Description(food:food),
+  //     );
+  //   });
+  // }
+
   Widget build(BuildContext context) {
     
     Price price = Price();
@@ -162,9 +172,10 @@ class _CheckOutState extends State<CheckOut> {
                   ),
                 ),
 
-                SizedBox(
-                  height: 30,
-                ),
+                // SizedBox(
+                //   height: 30,
+                // ),
+                FlatButton(onPressed: (){}, child: Text("Add Promo code")),
                 Container(
                   height: 50,
                   color: Colors.grey[300],

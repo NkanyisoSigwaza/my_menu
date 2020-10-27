@@ -16,6 +16,7 @@ class Auth{
   final FirebaseAuth _auth = FirebaseAuth.instance;  //_ means private in variable auth
 
   String uid;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   //List<Order> orders = [Order(image: "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg",price: 0,food_id: "placeholder")];
   //create user object based on Firebase user
   List<ConfirmCheckOut> orders = [];
@@ -38,7 +39,9 @@ class Auth{
   //sign out
   Future signOut() async{
     try{
+      await _googleSignIn.signOut();
       return await _auth.signOut();
+
     }
     catch(e){
       print("________________________________no SIGN OUT $e");

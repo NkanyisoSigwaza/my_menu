@@ -1,6 +1,7 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mymenu/Models/FoodItem.dart';
@@ -52,12 +53,24 @@ class DescriptionState with ChangeNotifier{
         "driverSeen":null,
         "restaurantSeen":null
       }
+      
     };
+
+
 
 
     return await Firestore.instance.collection("OrdersRefined").document(uid).setData(docData,merge: true);
 
 
+  }
+
+  logOrderToCart({String title,int quantity,String restaurant,double price}) {
+    FirebaseAnalytics().logEvent(name: "Added to cart", parameters: {
+      "title": title,
+      "quantity":quantity,
+      "restaurant":restaurant,
+      "price":price
+    });
   }
 
 

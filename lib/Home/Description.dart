@@ -117,6 +117,12 @@ class _DescriptionState extends State<Description> {
 
               setState(() {
                 descriptionState.count = 0;
+                descriptionState.logOrderToCart(
+                  title: widget.food.title,
+                  restaurant: widget.food.restaurant,
+                  quantity: widget.food.quantity,
+                  price: widget.food.price
+                );
               });
               await descriptionState.updateUserData(widget.food,widget.food.id); //uploads order to database
               Navigator.pop(context);

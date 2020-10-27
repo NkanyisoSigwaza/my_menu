@@ -1,3 +1,6 @@
+//import 'dart:html';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
@@ -14,7 +17,8 @@ class RegisterState with ChangeNotifier {
   final FirebaseAuth _auth= FirebaseAuth.instance;
   TextEditingController name = TextEditingController();
   TextEditingController surname = TextEditingController();
-  TextEditingController phone = TextEditingController();
+  TextEditingController passwordOriginal = TextEditingController();
+  TextEditingController passwordConfirm = TextEditingController();
   TextEditingController emailValue = TextEditingController();
 
 
@@ -40,6 +44,30 @@ class RegisterState with ChangeNotifier {
     return null;
   }
 
+  String validateName(String name) {
+    if (name.isEmpty) {
+      //user didn't enter email
+
+      notifyListeners();
+      return "Enter Name";
+    }
+    //user entered email correctly
+    notifyListeners();
+    return null;
+  }
+
+  String validateSurname(String surname) {
+    if (surname.isEmpty) {
+      //user didn't enter email
+
+      notifyListeners();
+      return "Enter Surname";
+    }
+    //user entered email correctly
+    notifyListeners();
+    return null;
+  }
+
   // ensures user types correct password
   String validatePassword(String password) {
     if (password.length < 6) {
@@ -47,6 +75,19 @@ class RegisterState with ChangeNotifier {
 
       notifyListeners();
       return "Enter password 6 characters long";
+    }
+    notifyListeners();
+    //user entered valid password
+    return null;
+  }
+
+  // ensures user types correct password
+  String confirmPassword(String password) {
+    if (password != passwordOriginal.text) {
+      //user didn't enter valid password
+
+      notifyListeners();
+      return "Passwords do not match!";
     }
     notifyListeners();
     //user entered valid password
@@ -67,9 +108,29 @@ class RegisterState with ChangeNotifier {
         loading = false;
         error = "please supply a valid email";
       }
+      else{
+
+        // loads user data to database every time new user registers
+          String uid = await Auth().inputData();
+          return await Firestore.instance.collection("Users").document(uid).setData({
+
+
+            "name":name.text,
+            "surname":surname.text,
+            "email":email,
+            "user":"Customer",
+            "date":DateTime.now()
+
+          });
+
+
+
+      }
     }
     notifyListeners();
   }
+
+
 
   // Returns user object which contains firebaseID
   User _userFromFireBaseUser(FirebaseUser user){

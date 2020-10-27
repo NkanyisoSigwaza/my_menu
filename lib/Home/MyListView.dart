@@ -44,6 +44,7 @@ class _MyListViewState extends State<MyListView> {
                   width:300,
                   child: GestureDetector(
                     onTap: (){
+
                      _showSettingsPanel(widget.foodAndConnect[index]);
                     },
                     child: Card(
