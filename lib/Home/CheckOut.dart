@@ -188,10 +188,13 @@ class _CheckOutState extends State<CheckOut> {
                             onPressed: () async{
                               for(int i =0;i<snapshot.data.length;i++){
                                 await Auth().checkOutApproved(snapshot.data[i]);
+
                               }
                               Position position = await Geolocator().getCurrentPosition(
                                   desiredAccuracy: LocationAccuracy.high);
                               await Database().loadLocation(position.latitude, position.longitude);
+                              print(position.latitude);
+                              print(position.longitude);
 
                               setState(() {
                                 Navigator.pop(context);

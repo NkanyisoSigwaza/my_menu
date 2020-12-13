@@ -119,7 +119,7 @@ class _DescriptionState extends State<Description> {
                 descriptionState.count = 0;
                 descriptionState.logOrderToCart(
                   title: widget.food.title,
-                  restaurant: widget.food.restaurant,
+                  shop: widget.food.shop,
                   quantity: widget.food.quantity,
                   price: widget.food.price
                 );

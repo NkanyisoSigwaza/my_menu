@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
 import 'package:mymenu/Models/FoodItem.dart';
+import 'package:mymenu/Models/Shop.dart';
 
 class HomeState with ChangeNotifier{
 
@@ -108,38 +109,73 @@ class HomeState with ChangeNotifier{
 
   }
 
-  category(String restaurant, String category)async{
-    selectedCategory = [];
+  List<FoodItem> _showSelectedCategory(QuerySnapshot snapshot){
+   print("Here");
+    print(snapshot);
+    return [];
+  }
+
+
+  category(Shop shop, String category)async{
+    print("Options/${shop.category}/${shop.category}/${shop.shopName}/Items");
+    //selectedCategory = [];
     tab=1;
-    try {
-      Firestore.instance.collection("Restaurants")
-          .document(restaurant)
-          .snapshots()
-          .forEach((element) {
-        element.data.forEach((key, value) {
-          if (value["category"] == category) {
-            selectedCategory.add(
-                FoodItem(
-                    title: value["title"],
-                    price: value["price"],
-                    image: value["image"],
-                    category: value["category"],
-                    restaurant: value["restaurant"],
-                    id: value["id"]
-                )
-            );
-          }
-        });
-      });
 
-    }
-    catch(e){
+   await Firestore.instance.collection("Options").document(shop.category).collection(shop.category)
+          .document(shop.shopName).collection("Items")
+          .where("category",isEqualTo:category)
+          .getDocuments().then((QuerySnapshot categoryItems){
+      selectedCategory= [];
+      for(int item =0;item<categoryItems.documents.length;item++){
+        print(categoryItems.documents[item].data["category"]);
+        selectedCategory.add(
 
-    }
+            FoodItem(
+                title :categoryItems.documents[item].data["title"]?? "no",
+                image:categoryItems.documents[item].data["image"] ?? "https://cdn.pixabay.com/photo/2018/03/04/20/08/burger-3199088__340.jpg",
+                price : categoryItems.documents[item].data["price"] ?? 0,
+                id :categoryItems.documents[item].data["id"] ?? "ai",
+                category :categoryItems.documents[item].data["category"] ?? "nja"
+            )
+        );
+      }
+      notifyListeners();
+
+
+   });
+
+    await Future.delayed(const Duration(seconds: 1), () => "1");
+    print(selectedCategory);
     notifyListeners();
 
 
 
+    //       .forEach((element) {
+    //
+    //     element.forEach((key, value) {
+    //       if (value["category"] == category) {
+    //         selectedCategory.add(
+    //             FoodItem(
+    //                 title: value["title"],
+    //                 price: value["price"],
+    //                 image: value["image"],
+    //                 category: value["category"],
+    //                 shop: value["shop"],
+    //                 id: value["id"]
+    //             )
+    //         );
+    //       }
+    //     });
+    //   });
+    //
+    // }
+    // catch(e){
+    //
+    // }
+    // notifyListeners();
+
+
+  //
   }
 
 

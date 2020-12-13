@@ -12,6 +12,7 @@ import 'package:mymenu/Home/CheckOut.dart';
 import 'package:mymenu/Maps/MyMap.dart';
 import 'package:mymenu/Models/FoodItem.dart';
 import 'package:mymenu/Models/Restuarant.dart';
+import 'package:mymenu/Models/Shop.dart';
 import 'package:mymenu/Navigate/Wrapper.dart';
 
 import 'package:mymenu/Shared/Database.dart';
@@ -29,9 +30,9 @@ import 'package:mymenu/VoucherHome/VoucherHome.dart';
 
 class Home extends StatefulWidget {
 
-  Restaurant restaurant;
+  Shop shop;
 
-  Home({this.restaurant});
+  Home({this.shop});
   @override
   _HomeState createState() => _HomeState();
 }
@@ -66,7 +67,7 @@ class _HomeState extends State<Home> {
 
               elevation: 0,
               title:Text(
-                foodItems[0].restaurant,
+                foodItems[0].shop,
 
                 style:TextStyle(
                   color: Colors.black,
@@ -88,119 +89,143 @@ class _HomeState extends State<Home> {
       drawer:UserDrawer(),
       body:Column(
         children: <Widget>[
-          Container(
-            //margin:EdgeInsets.only(top:10),
-              padding: EdgeInsets.only(top:10),
-             // color:Colors.grey[400],
-              child:Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  OutlineButton(
-
-                    borderSide: BorderSide(
-                        color:Colors.grey
-                    ),
-
-                    shape:RoundedRectangleBorder(
-
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    onPressed: ()async{
-                      homeState.tab =0;
-                      //print("yeah");
-                      homeState.food= await Database().test();
-
-                    },
-                    child:Text(
-                        "Burgers",
-                        style:TextStyle(
-                          letterSpacing: 2,
-
-                        )
-
-                    ),
-                  ),
-                  OutlineButton(
-                    borderSide: BorderSide(
-                        color:Colors.grey
-                    ),
-
-                    shape:RoundedRectangleBorder(
-
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    onPressed: ()async{
-                    await homeState.showPizza();
-                  },
-                    child:Text(
-                        "Pizza",
-                        style:TextStyle(
-                          letterSpacing: 2,
-                        )
-
-                    ),
-                  ),
-                  OutlineButton(
-                    borderSide: BorderSide(
-                        color:Colors.grey
-                    ),
-
-                    shape:RoundedRectangleBorder(
-
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    onPressed: ()async{
-
-                      await homeState.showDrinks();
-                    },
-                    child:Text(
-                        "Drinks",
-                        style:TextStyle(
-                          letterSpacing: 2,
-                        )
-
-                    ),
-
-                  ),
-                  OutlineButton(
-                    borderSide: BorderSide(
-                        color:Colors.grey
-                    ),
-
-                    shape:RoundedRectangleBorder(
-
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    onPressed: ()async{
-                      await homeState.showDessert();
-                    },
-                    child:Text(
-                      "Dessert",
-                      style:TextStyle(
-                        letterSpacing: 2,
-                      )
-
-
-                    ),
-
-                  )
-                ],
-              )
-          ),
+          // Container(
+          //   //margin:EdgeInsets.only(top:10),
+          //     padding: EdgeInsets.only(top:10),
+          //    // color:Colors.grey[400],
+          //     child:Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //       children: <Widget>[
+          //         OutlineButton(
+          //
+          //           borderSide: BorderSide(
+          //               color:Colors.grey
+          //           ),
+          //
+          //           shape:RoundedRectangleBorder(
+          //
+          //             borderRadius: BorderRadius.circular(30),
+          //           ),
+          //           onPressed: ()async{
+          //             homeState.tab =0;
+          //             //print("yeah");
+          //             homeState.food= await Database().test();
+          //
+          //           },
+          //           child:Text(
+          //               "Burgers",
+          //               style:TextStyle(
+          //                 letterSpacing: 2,
+          //
+          //               )
+          //
+          //           ),
+          //         ),
+          //         OutlineButton(
+          //           borderSide: BorderSide(
+          //               color:Colors.grey
+          //           ),
+          //
+          //           shape:RoundedRectangleBorder(
+          //
+          //             borderRadius: BorderRadius.circular(30),
+          //           ),
+          //           onPressed: ()async{
+          //           await homeState.showPizza();
+          //         },
+          //           child:Text(
+          //               "Pizza",
+          //               style:TextStyle(
+          //                 letterSpacing: 2,
+          //               )
+          //
+          //           ),
+          //         ),
+          //         OutlineButton(
+          //           borderSide: BorderSide(
+          //               color:Colors.grey
+          //           ),
+          //
+          //           shape:RoundedRectangleBorder(
+          //
+          //             borderRadius: BorderRadius.circular(30),
+          //           ),
+          //           onPressed: ()async{
+          //
+          //             await homeState.showDrinks();
+          //           },
+          //           child:Text(
+          //               "Drinks",
+          //               style:TextStyle(
+          //                 letterSpacing: 2,
+          //               )
+          //
+          //           ),
+          //
+          //         ),
+          //         OutlineButton(
+          //           borderSide: BorderSide(
+          //               color:Colors.grey
+          //           ),
+          //
+          //           shape:RoundedRectangleBorder(
+          //
+          //             borderRadius: BorderRadius.circular(30),
+          //           ),
+          //           onPressed: ()async{
+          //             await homeState.showDessert();
+          //           },
+          //           child:Text(
+          //             "Dessert",
+          //             style:TextStyle(
+          //               letterSpacing: 2,
+          //             )
+          //
+          //
+          //           ),
+          //
+          //         )
+          //       ],
+          //     )
+          // ),
           Container(
             height: 50,
             width: 600,
             child: ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: widget.restaurant.categories.length,
+              itemCount: widget.shop.categories.length,
                 itemBuilder: (context,index){
                 return GestureDetector(
-                  child: Card(
-                    child:Text(widget.restaurant.categories[index])
+                  child: OutlineButton(
+                    borderSide: BorderSide(
+                        color:Colors.grey
+                    ),
+
+                    shape:RoundedRectangleBorder(
+
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    onPressed: ()async{
+                      await homeState.category(widget.shop, widget.shop.categories[index]);
+
+                      print(homeState.selectedCategory);
+
+                      return MyListView(foodAndConnect: homeState.selectedCategory);
+
+                    },
+                    child:Text(
+                        widget.shop.categories[index],
+                        style:TextStyle(
+                          letterSpacing: 2,
+                        )
+
+
+                    ),
+
                   ),
                   onTap: ()async{
-                   await homeState.category(widget.restaurant.restaurantName, widget.restaurant.categories[index]);
+                  // await homeState.category(widget.shop.shopName, widget.shop.categories[index]);
                   },
                 );
                 }),

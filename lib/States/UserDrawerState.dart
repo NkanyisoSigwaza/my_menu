@@ -50,6 +50,8 @@ TextEditingController promoCode = TextEditingController();
 
     promoCode.clear();
      notifyListeners();
+
+
     }
     else{
 

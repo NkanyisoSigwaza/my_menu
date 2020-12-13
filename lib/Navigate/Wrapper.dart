@@ -7,11 +7,11 @@ import 'package:mymenu/Models/User.dart';
 import 'package:mymenu/Navigate/Director.dart';
 import 'package:mymenu/Shared/Database.dart';
 import 'package:mymenu/States/OptionsState.dart';
-import 'package:mymenu/States/RestaurantState.dart';
+import 'package:mymenu/States/ShopsState.dart';
 import 'package:mymenu/States/UserDrawerState.dart';
 import 'package:provider/provider.dart';
-import 'package:mymenu/Home/Resturants.dart';
-import 'package:mymenu/Home/Resturants.dart';
+import 'package:mymenu/Home/Shops.dart';
+import 'package:mymenu/Home/Shops.dart';
 
 class Wrapper extends StatelessWidget {
   @override
@@ -28,11 +28,14 @@ class Wrapper extends StatelessWidget {
       // Bastard signed in!
       return MultiProvider(
         providers: [
-          StreamProvider.value(
-          value: RestaurantState().numberRestaurants()
-          ),
+          // StreamProvider.value(
+          // value: RestaurantState().numberRestaurants()
+          // ),
           ChangeNotifierProvider.value(value: UserDrawerState()),
           ChangeNotifierProvider.value(value: OptionsState()),
+          StreamProvider.value(
+              value: OptionsState().getOptions()
+          ),
         ],
         child: Options(),
       );

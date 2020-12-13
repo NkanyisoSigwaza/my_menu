@@ -3,24 +3,29 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mymenu/Models/Restuarant.dart';
+import 'package:mymenu/Models/Shop.dart';
 import 'package:mymenu/Navigate/Director.dart';
 import 'package:mymenu/Shared/Loading.dart';
 import 'package:mymenu/Shared/UserDrawer.dart';
-import 'package:mymenu/States/RestaurantState.dart';
+import 'package:mymenu/States/ShopsState.dart';
 import 'package:mymenu/States/UserDrawerState.dart';
 import 'package:provider/provider.dart';
 
-class Resturants extends StatefulWidget {
+class Shops extends StatefulWidget {
+  String category;
+
+  Shops({this.category});
   @override
-  _ResturantsState createState() => _ResturantsState();
+  _ShopsState createState() => _ShopsState();
 }
 
-class _ResturantsState extends State<Resturants> {
+class _ShopsState extends State<Shops> {
   @override
   Widget build(BuildContext context) {
-    final restaurants = Provider.of<List<Restaurant>>(context);
-    final restaurantState = Provider.of<RestaurantState>(context);
-    return restaurants==null ? Loading(): ChangeNotifierProvider.value(
+
+    final shops = Provider.of<List<Shop>>(context);
+    final shopsState = Provider.of<ShopsState>(context);
+    return shops==null ? Loading(): ChangeNotifierProvider.value(
       value: UserDrawerState(),
       child: Scaffold(
         drawer:UserDrawer(),
@@ -78,18 +83,19 @@ class _ResturantsState extends State<Resturants> {
                   //onPageChanged: callbackFunction,
                   scrollDirection: Axis.horizontal,
                 ),
-                itemCount: restaurants.length,
+                itemCount: shops.length,
                 itemBuilder: (BuildContext context, int index) =>
                     Container(
                       child: GestureDetector(
                         onTap: (){
-                          restaurantState.logShopSelected(restaurants[index].restaurantName);
+                          shopsState.logShopSelected(shops[index].shopName);
+
 
 
                               setState(() {
                                 Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => Director(restaurant: restaurants[index],))
+                                    MaterialPageRoute(builder: (context) => Director(shop: shops[index],category: widget.category,))
                                 );
                               });
                             },
@@ -99,7 +105,7 @@ class _ResturantsState extends State<Resturants> {
                             borderRadius: BorderRadius.circular(60),
                           ),
                           child: Image(
-                            image:NetworkImage(restaurants[index].restaurantBackground ?? "https://www.bengi.nl/wp-content/uploads/2014/10/no-image-available1.png"),
+                            image:NetworkImage(shops[index].shopBackground ?? "https://www.bengi.nl/wp-content/uploads/2014/10/no-image-available1.png"),
                             fit:BoxFit.cover,
                           ),
                         ),
@@ -156,7 +162,7 @@ class _ResturantsState extends State<Resturants> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
-                    "Restaurants",
+                    "Shops",
                     style: TextStyle(
                       fontSize: 30,
                       letterSpacing: 2,
@@ -174,24 +180,24 @@ class _ResturantsState extends State<Resturants> {
                         crossAxisCount: 2),
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
-                  itemCount: restaurants.length,
+                  itemCount: shops.length,
                     itemBuilder: (context,index){
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(20,0,20,20),
                       child: GestureDetector(
-                        onTap:(){
-
-                          restaurantState.logShopSelected(restaurants[index].restaurantName);
-
-
-                          setState(() {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => Director(restaurant: restaurants[index],))
-                            );
-                          });
-
-                        },
+                        // onTap:(){
+                        //
+                        //   restaurantState.logShopSelected(shops[index].shopName);
+                        //
+                        //
+                        //   setState(() {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(builder: (context) => Director(restaurant: restaurants[index],))
+                        //     );
+                        //   });
+                        //
+                        // },
                         child: Column(
                           //mainAxisAlignment: MainAxisAlignment.center,
                           children:[
@@ -210,7 +216,7 @@ class _ResturantsState extends State<Resturants> {
 
 
                                 child:CircleAvatar(
-                                  backgroundImage:NetworkImage(restaurants[index].restaurantBackground ?? "https://www.bengi.nl/wp-content/uploads/2014/10/no-image-available1.png"),
+                                  backgroundImage:NetworkImage(shops[index].shopBackground ?? "https://www.bengi.nl/wp-content/uploads/2014/10/no-image-available1.png"),
                                   radius:100,
                                 ),
 //                            Card(
