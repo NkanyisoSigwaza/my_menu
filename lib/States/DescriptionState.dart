@@ -48,7 +48,7 @@ class DescriptionState with ChangeNotifier{
         "image":food.image,
         "inActive":1,
         "date":DateTime.now(),
-        "restaurant":food.restaurant,
+        "shop":food.shop,
         "checkOut":"No",
         "driverSeen":null,
         "restaurantSeen":null
@@ -64,11 +64,11 @@ class DescriptionState with ChangeNotifier{
 
   }
 
-  logOrderToCart({String title,int quantity,String restaurant,double price}) {
+  logOrderToCart({String title,int quantity,String shop,double price}) {
     FirebaseAnalytics().logEvent(name: "Added to cart", parameters: {
       "title": title,
       "quantity":quantity,
-      "restaurant":restaurant,
+      "shop":shop,
       "price":price
     });
   }

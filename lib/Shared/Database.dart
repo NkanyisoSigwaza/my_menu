@@ -66,7 +66,7 @@ class Database{
                          price : docs.documents[i].data["price"] ?? 0,
                          id : docs.documents[i].data["id"] ?? "ai",
                          category :docs.documents[i].data["category"] ?? "nja",
-                         restaurant: docs.documents[i].data["restaurant"] ?? "nja"
+                         shop: docs.documents[i].data["restaurant"] ?? "nja"
                      )
                  );
              print(docs.documents[i].data["title"]?? "no");

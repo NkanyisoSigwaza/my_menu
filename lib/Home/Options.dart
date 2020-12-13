@@ -5,10 +5,10 @@ import 'package:mymenu/Navigate/Director.dart';
 import 'package:mymenu/Shared/Loading.dart';
 import 'package:mymenu/Shared/UserDrawer.dart';
 import 'package:mymenu/States/OptionsState.dart';
-import 'package:mymenu/States/RestaurantState.dart';
+import 'package:mymenu/States/ShopsState.dart';
 import 'package:provider/provider.dart';
 
-import 'Resturants.dart';
+import 'Shops.dart';
 
 class Options extends StatefulWidget {
   @override
@@ -16,15 +16,16 @@ class Options extends StatefulWidget {
 }
 
 class _OptionsState extends State<Options> {
-  List<Option> options = [
-    Option(category: "Food",url:"https://www.helpguide.org/wp-content/uploads/fast-foods-candy-cookies-pastries-768.jpg"),
-    Option(category:"Liquor",url:"https://www.sabcnews.com/sabcnews/wp-content/uploads/2020/07/sabc-news-alcohol-R.jpg"),
-    Option(category:"Gifts",url:"https://static.zando.co.za/cms/gift-ideas/Gift-ideas-gifts-for-dad.jpg")
-  ];
+  // List<Option> options = [
+  //   Option(category: "Food",url:"https://www.helpguide.org/wp-content/uploads/fast-foods-candy-cookies-pastries-768.jpg"),
+  //   Option(category:"Liquor",url:"https://www.sabcnews.com/sabcnews/wp-content/uploads/2020/07/sabc-news-alcohol-R.jpg"),
+  //   Option(category:"Gifts",url:"https://static.zando.co.za/cms/gift-ideas/Gift-ideas-gifts-for-dad.jpg")
+  // ];
   @override
   Widget build(BuildContext context) {
     final optionsState = Provider.of<OptionsState>(context);
-    return Scaffold(
+    final optionCategories = Provider.of<List<Option>>(context);
+    return optionCategories==null? Loading():Scaffold(
       drawer: UserDrawer(),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
@@ -66,7 +67,7 @@ class _OptionsState extends State<Options> {
                       crossAxisCount: 2),
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  itemCount: options.length,
+                  itemCount: optionCategories.length,
                   itemBuilder: (context,index){
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(20,0,20,20),
@@ -74,7 +75,7 @@ class _OptionsState extends State<Options> {
                         //mainAxisAlignment: MainAxisAlignment.center,
                           children:[
                       Text(
-                        options[index].category,
+                        optionCategories[index].category,
                         style: TextStyle(
                           fontSize:30,
                           color: Colors.amber,
@@ -91,33 +92,39 @@ class _OptionsState extends State<Options> {
 
 
                                   child: CircleAvatar(
-                                    backgroundImage:NetworkImage(options[index].url ?? "https://www.bengi.nl/wp-content/uploads/2014/10/no-image-available1.png"),
+                                    backgroundImage:NetworkImage(optionCategories[index].url ?? "https://www.bengi.nl/wp-content/uploads/2014/10/no-image-available1.png"),
                                     radius:55,
                                   ),
                                 ),
                                 onTap: (){
                                   setState(() {
-                                    optionsState.logOptionScreen(options[index].category);
-    if(options[index].category=="Food") {
+                                    optionsState.logOptionScreen(optionCategories[index].category);
 
 
-    Navigator.push(context,MaterialPageRoute(builder: (context){
-      return MultiProvider(
-        providers:[StreamProvider<List<Restaurant>>.value(
-            value: RestaurantState().numberRestaurants(),
-        ),
-          ChangeNotifierProvider.value(value: RestaurantState())],
-        child: Resturants(),
-      );}));
+      Navigator.push(context,MaterialPageRoute(builder: (context){
+        return  MultiProvider(
+          providers: [
+            StreamProvider.value(value: ShopsState().getShops(category:optionCategories[index].category)),
+            ChangeNotifierProvider.value(value: ShopsState()),
+
+          ],
+            child: Shops(category:optionCategories[index].category ,));
+      }));
+
+
+    // Navigator.push(context,MaterialPageRoute(builder: (context){
+    //   return MultiProvider(
+    //     providers:[StreamProvider<List<Restaurant>>.value(
+    //         value: RestaurantState().numberRestaurants(),
+    //     ),
+    //       ChangeNotifierProvider.value(value: RestaurantState())],
+    //     child: Resturants(category:optionCategories[index].category ,),
+    //   );}));
 //                                      return StreamProvider.value(
 //                                          value: RestaurantState().numberRestaurants(),
 //                                          child: Resturants()
 //                                      );
-    }
-    else{
-        Navigator.push(context,MaterialPageRoute(builder: (context)=>Loading()));
 
-    }
     });
                                       }
                                 

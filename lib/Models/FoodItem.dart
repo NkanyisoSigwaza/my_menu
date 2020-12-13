@@ -10,7 +10,7 @@ class FoodItem {
   double price;
   String image;
   int quantity;
-  String restaurant;
+  String shop;
 
   FoodItem({
     this.id,
@@ -19,7 +19,7 @@ class FoodItem {
     this.price,
     this.image,
     this.quantity=1,
-    this.restaurant
+    this.shop
 
   });
 
