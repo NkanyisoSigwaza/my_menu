@@ -188,48 +188,91 @@ class _HomeState extends State<Home> {
           //       ],
           //     )
           // ),
-          Container(
-            height: 50,
-            width: 600,
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: widget.shop.categories.length,
-                itemBuilder: (context,index){
-                return GestureDetector(
-                  child: OutlineButton(
-                    borderSide: BorderSide(
-                        color:Colors.grey
-                    ),
+          Row(
+            children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: GestureDetector(
+                           child: OutlineButton(
+                              borderSide: BorderSide(
+                                 color:Colors.grey
+                              ),
 
-                    shape:RoundedRectangleBorder(
+                         shape:RoundedRectangleBorder(
 
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    onPressed: ()async{
-                      await homeState.category(widget.shop, widget.shop.categories[index]);
+                           borderRadius: BorderRadius.circular(30),
+                         ),
+                         onPressed: ()async{
+                                setState(() {
+                                  homeState.tab =0;
+                                });
 
-                      print(homeState.selectedCategory);
+                            return MyListView(foodAndConnect: foodItems);
 
-                      return MyListView(foodAndConnect: homeState.selectedCategory);
-
-                    },
-                    child:Text(
-                        widget.shop.categories[index],
-                        style:TextStyle(
-                          letterSpacing: 2,
-                        )
+                            },
+                           child:Text(
+                              "All",
+                              style:TextStyle(
+                                letterSpacing: 2,
+                              )
 
 
-                    ),
+                           ),
 
-                  ),
-                  onTap: ()async{
-                  // await homeState.category(widget.shop.shopName, widget.shop.categories[index]);
-                  },
-                );
-                }),
+              ),
+                        ),
+                      ),
+              Expanded(
+                child: Container(
+                  height: 50,
+                  width: 600,
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: widget.shop.categories.length,
+                      itemBuilder: (context,index){
+                        return Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: GestureDetector(
+                            child: OutlineButton(
+                              borderSide: BorderSide(
+                                  color:Colors.grey
+                              ),
+
+                              shape:RoundedRectangleBorder(
+
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              onPressed: ()async{
+                                await homeState.category(widget.shop, widget.shop.categories[index]);
+
+                                print(homeState.selectedCategory);
+
+                                return MyListView(foodAndConnect: homeState.selectedCategory);
+
+                              },
+                              child:Text(
+                                  widget.shop.categories[index],
+                                  style:TextStyle(
+                                    letterSpacing: 2,
+                                  )
+
+
+                              ),
+
+                            ),
+                            onTap: ()async{
+                              // await homeState.category(widget.shop.shopName, widget.shop.categories[index]);
+                            },
+                          ),
+                        );
+                      }),
+                ),
+              ),
+            ],
+
           ),
+
         SizedBox(
           height:10
         ),
