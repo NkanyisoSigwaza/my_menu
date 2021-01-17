@@ -135,7 +135,8 @@ class HomeState with ChangeNotifier{
                 image:categoryItems.documents[item].data["image"] ?? "https://cdn.pixabay.com/photo/2018/03/04/20/08/burger-3199088__340.jpg",
                 price : categoryItems.documents[item].data["price"] ?? 0,
                 id :categoryItems.documents[item].data["id"] ?? "ai",
-                category :categoryItems.documents[item].data["category"] ?? "nja"
+                category :categoryItems.documents[item].data["category"] ?? "nja",
+                shop: shop.shopName
             )
         );
       }

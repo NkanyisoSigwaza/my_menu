@@ -34,11 +34,12 @@ class CheckOutState with ChangeNotifier{
               price:snapshot[element]["price"],
               quantity: snapshot[element]["quantity"],
               time: snapshot[element]["date"],
-              restaurant:snapshot[element]["restaurant"]
+              shop:snapshot[element]["shop"]
           ));
 
 
         }
+        print(snapshot[element]["shop"]);
       }
       catch(e){
         print(e);
@@ -65,7 +66,7 @@ class CheckOutState with ChangeNotifier{
       FirebaseAnalytics().logEvent(name: "OrderPlaced",parameters: {
         "title":orders[i].title,
         "price":orders[i].price,
-        "restaurant":orders[i].restaurant,
+        "shop":orders[i].shop,
         "date":orders[i].time,
         "quantity":orders[i].quantity
       });

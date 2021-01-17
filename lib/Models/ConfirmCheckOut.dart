@@ -1,6 +1,7 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class ConfirmCheckOut{
 
@@ -8,9 +9,9 @@ class ConfirmCheckOut{
   double price;
   Timestamp time;
   int quantity;
-  String restaurant;
+  String shop;
 
-  ConfirmCheckOut({this.title,this.price,this.quantity,this.time,this.restaurant});
+  ConfirmCheckOut({this.title,this.price,this.quantity,this.time,this.shop});
 
 
 
