@@ -57,13 +57,14 @@ class Auth{
 
   //CB and edit
   Future checkOutApproved(ConfirmCheckOut food) async{
+    String uid = await inputData();
 
-    await Firestore.instance.collection("OrdersShops").document("OrdersShops").collection(food.shop).document("${food.time.toDate()}").setData({
+    await Firestore.instance.collection("OrdersShops").document("OrdersShops").collection(food.shop).document(food.shop).collection(uid).document("${food.time.toDate()}").setData({
       'title':food.title,
       'price':food.price,
       'quantity':food.quantity,
       'active':1,
-      'shop':food.shop
+
 
 
     },merge: true);
