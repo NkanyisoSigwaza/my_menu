@@ -76,7 +76,7 @@ class _MyListViewState extends State<MyListView> {
                                       )
                                   ),
                                   Text(
-                                      "R${widget.foodAndConnect[index].price}0",
+                                      "R${widget.foodAndConnect[index].price.toStringAsFixed(2)}",
                                       style:TextStyle(
                                         fontSize: 20,
                                         color: Colors.white,

@@ -9,8 +9,10 @@ import 'package:mymenu/Authenticate/Authenticate.dart';
 import 'package:mymenu/Authenticate/SignIn.dart';
 
 import 'package:mymenu/Home/CheckOut.dart';
+import 'package:mymenu/Home/MealDescription.dart';
 import 'package:mymenu/Maps/MyMap.dart';
 import 'package:mymenu/Models/FoodItem.dart';
+import 'package:mymenu/Models/Meal.dart';
 import 'package:mymenu/Models/Restuarant.dart';
 import 'package:mymenu/Models/Shop.dart';
 import 'package:mymenu/Navigate/Wrapper.dart';
@@ -49,6 +51,7 @@ class _HomeState extends State<Home> {
 
     final foodItems = Provider.of<List<FoodItem>>(context);
     final homeState = Provider.of<HomeState>(context);
+
 
 
 
@@ -244,11 +247,39 @@ class _HomeState extends State<Home> {
                                 borderRadius: BorderRadius.circular(30),
                               ),
                               onPressed: ()async{
-                                await homeState.category(widget.shop, widget.shop.categories[index]);
+                                if(widget.shop.categories[index] == "Meals"){
+                                  List<Meal> meals = await homeState.allMeals(widget.shop, widget.shop.categories[index]);
+                                  // setState(() {
+                                  //   Navigator.push(
+                                  //       context,
+                                  //       MaterialPageRoute(
+                                  //           builder: (context) => MealDescription(meals: meals,))
+                                  //   );
+                                  // });
+                                  print(meals);
+                                  print(homeState.tab);
+                                  return Container(
+                                    child: Text("hello"),
+                                  );
 
-                                print(homeState.selectedCategory);
 
-                                return MyListView(foodAndConnect: homeState.selectedCategory);
+
+                                  //return MealDescription(meals: meals,);
+                                }
+                                else {
+                                      await homeState.category(widget.shop,
+                                          widget.shop.categories[index]);
+
+                                      print(homeState.selectedCategory);
+                                      return Container(
+                                        child: Text("hello"),
+                                      );
+
+                                      // return MyListView(foodAndConnect: homeState
+                                      //     .selectedCategory);
+                                }
+
+
 
                               },
                               child:Text(
@@ -283,7 +314,7 @@ class _HomeState extends State<Home> {
             MyListView(foodAndConnect: homeState.selectedCategory),
 
           if(homeState.tab==2)
-            MyListView(foodAndConnect: homeState.drinks),
+            MealDescription(meals: homeState.meals),
 
           if(homeState.tab==3)
             MyListView(foodAndConnect: homeState.desserts),

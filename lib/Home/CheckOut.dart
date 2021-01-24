@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:mymenu/Home/OrderPlaced.dart';
 import 'package:mymenu/Home/messageDriver.dart';
 import 'package:mymenu/Maps/MyMap.dart';
+import 'package:mymenu/Models/ConfirmCheckOut.dart';
 import 'package:mymenu/Models/Order.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
 import 'package:mymenu/Shared/Database.dart';
@@ -70,7 +71,7 @@ class _CheckOutState extends State<CheckOut> {
           return Loading();
         }
         return Container(
-          color: Colors.grey[100],
+          color: Colors.black,
           child: SafeArea(
             child: Column(
               children: <Widget>[
@@ -78,7 +79,7 @@ class _CheckOutState extends State<CheckOut> {
 
 
                   child: Container(
-                    color: Colors.grey[300],
+                    color: Colors.green[800],
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -101,6 +102,7 @@ class _CheckOutState extends State<CheckOut> {
                 ),
                 Expanded(
                   child: ListView.builder(
+                    shrinkWrap: true,
 
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
@@ -135,28 +137,41 @@ class _CheckOutState extends State<CheckOut> {
 
                                       ),
 
-                                      title: Text(
-                                        snapshot.data[index].title ??
-                                            "No title",
+                                      title: Column(
+                                        children: [
+                                          Text(
+                                            snapshot.data[index].title ??
+                                                "No title",
 
 
-                                        style: TextStyle(
-                                          //fontSize: 15,
-                                          //color:Colors.black,
-                                          //decoration: TextDecoration.underline,
+                                            style: TextStyle(
+                                              fontSize: 25,
+                                              //color:Colors.black,
+                                              //decoration: TextDecoration.underline,
 
-                                        ),
+                                            ),
 
+                                          ),
+                                          SizedBox(
+                                            height:MediaQuery.of(context).size.height/30,
+                                          ),
+
+                                          for(dynamic option in snapshot.data[index].mealOptions)
+                                            Text(option.toString() ?? "")
+                                        ],
                                       ),
 
                                       subtitle: Padding(
                                         padding: const EdgeInsets.only(top: 15),
-                                        child: Text(
-                                          "${snapshot.data[index]
-                                              .quantity} X R${snapshot
-                                              .data[index].price}",
-                                          style: TextStyle(
-                                            //fontSize: 25,
+                                        child: Center(
+                                          child: Text(
+                                            "${snapshot.data[index]
+                                                .quantity} X R${snapshot
+                                                .data[index].price}",
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.amber[800]
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -172,29 +187,27 @@ class _CheckOutState extends State<CheckOut> {
                   ),
                 ),
 
-                // SizedBox(
-                //   height: 30,
-                // ),
-                FlatButton(onPressed: (){}, child: Text("Add Promo code")),
+
                 Container(
                   height: 50,
-                  color: Colors.grey[300],
+                  color: Colors.green,
                   child: Row(
                     children: <Widget>[
                       Expanded(
                         child: FlatButton.icon(
-                            color: Colors.grey[300],
+                            color: Colors.green,
 
                             onPressed: () async{
+                              //final orders = snapshot.data;
                               for(int i =0;i<snapshot.data.length;i++){
                                 await Auth().checkOutApproved(snapshot.data[i]);
 
                               }
-                              Position position = await Geolocator().getCurrentPosition(
-                                  desiredAccuracy: LocationAccuracy.high);
-                              await Database().loadLocation(position.latitude, position.longitude);
-                              print(position.latitude);
-                              print(position.longitude);
+                              // Position position = await Geolocator().getCurrentPosition(
+                              //     desiredAccuracy: LocationAccuracy.high);
+                              // await Database().loadLocation(position.latitude, position.longitude);
+                              // print(position.latitude);
+                              // print(position.longitude);
 
                               setState(() {
                                 Navigator.pop(context);

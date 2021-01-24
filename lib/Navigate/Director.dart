@@ -33,6 +33,21 @@ class Director extends StatefulWidget {
 
 class _DirectorState extends State<Director> {
 
+  dynamic uid;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Auth().inputData().then((value){
+      setState(() {
+        uid = value;
+      });
+
+
+    });
+
+  }
+
 
 
 
@@ -45,10 +60,11 @@ class _DirectorState extends State<Director> {
 
   Widget build(BuildContext context) {
 
-    return MultiProvider(
+    return uid==null ? Loading():MultiProvider(
       providers: [
+
         StreamProvider<List<FoodItem>>.value(value: ShopsState().shopChosen(shopChosen: widget.shop.shopName,category: widget.category)),
-       // StreamProvider<List<FoodItem>>.value(value:Database().foodAndConnect(widget.resturant)),
+
         ChangeNotifierProvider.value(value: AppState()),
         ChangeNotifierProvider.value(value: HomeState()),
         ChangeNotifierProvider.value(value: DescriptionState()),

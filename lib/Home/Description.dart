@@ -55,7 +55,7 @@ class _DescriptionState extends State<Description> {
               height:30
           ),
           Text(
-            "R ${widget.food.price}",
+            "R ${widget.food.price.toStringAsFixed(2)}",
             style:TextStyle(
               fontSize: 20,
               letterSpacing: 2,

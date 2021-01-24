@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
 import 'package:mymenu/Models/FoodItem.dart';
+import 'package:mymenu/Models/Meal.dart';
+import 'package:mymenu/Models/MealOption.dart';
 import 'package:mymenu/Models/Shop.dart';
 
 class HomeState with ChangeNotifier{
-
+  List<Meal> meals =[];
   List<FoodItem> food = [];
   List<FoodItem> pizzas =[];
   List<FoodItem> desserts = [];
@@ -146,38 +148,99 @@ class HomeState with ChangeNotifier{
    });
 
     await Future.delayed(const Duration(seconds: 1), () => "1");
-    print(selectedCategory);
+
     notifyListeners();
 
-
-
-    //       .forEach((element) {
-    //
-    //     element.forEach((key, value) {
-    //       if (value["category"] == category) {
-    //         selectedCategory.add(
-    //             FoodItem(
-    //                 title: value["title"],
-    //                 price: value["price"],
-    //                 image: value["image"],
-    //                 category: value["category"],
-    //                 shop: value["shop"],
-    //                 id: value["id"]
-    //             )
-    //         );
-    //       }
-    //     });
-    //   });
-    //
-    // }
-    // catch(e){
-    //
-    // }
-    // notifyListeners();
-
-
-  //
   }
+
+ dynamic _mealsOption(QuerySnapshot meals){
+    print("Hey");
+    return null;
+    //print(meals);
+  }
+
+  Future<List<Meal>> allMeals(Shop shop, String category)async{
+
+    print("Options/${shop.category}/${shop.category}/${shop.shopName}/Meals");
+
+    List<MealOption> options = [];
+
+    Meal meal;
+    List<dynamic> compulsoryOptions = [];
+    Map<dynamic,dynamic> numberPerOption = {};
+    meals = [];
+
+    await Firestore.instance.collection("Options").document(shop.category).collection(shop.category)
+        .document(shop.shopName).collection("Meals").getDocuments().then((value){
+
+          value.documents.forEach((doc) {
+            doc.data.forEach((key, value) {
+
+              if(key == 'compulsoryOptions'){
+                compulsoryOptions = value.toList();
+
+
+              }
+            });
+
+            meal = Meal(
+              shop: shop.shopName,
+                title: doc.data['title'],
+                initialPrice: doc.data['initial Price'].toDouble(),
+                image: doc.data['image']
+            );
+
+            doc.data.forEach((key, value) {
+              if(key=='Options'){
+                // Different options
+                for(int optionName = 0;optionName<compulsoryOptions.length;optionName++){
+                  numberPerOption = value[compulsoryOptions[optionName]];
+
+                  for(int optionValue =1;optionValue< numberPerOption.length +1;optionValue++){
+
+                    options.add(
+                        MealOption(
+                            title: doc.data['Options'][compulsoryOptions[optionName]]['Item $optionValue']['title'],
+                            price: doc.data['Options'][compulsoryOptions[optionName]]['Item $optionValue']['price'].toDouble(),
+                            category:compulsoryOptions[optionName]
+                        )
+                    );
+
+                  }
+                  meal.addOption(options);
+
+                  options = [];
+
+
+                }
+
+
+
+
+              }
+            });
+
+
+            meals.add(meal);
+          });
+
+
+
+
+
+
+    });
+    tab=2;
+    notifyListeners();
+
+    return meals;
+
+
+
+
+  }
+
+
 
 
 

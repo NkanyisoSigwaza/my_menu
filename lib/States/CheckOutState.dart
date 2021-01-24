@@ -1,6 +1,6 @@
 
 
-
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,17 +25,28 @@ class CheckOutState with ChangeNotifier{
   List<ConfirmCheckOut> _ordersFromSnapshot(DocumentSnapshot snapshot) {
     snapshot.data.keys.forEach((element) {
 
+
       try {
 
 
         if(snapshot[element]["inActive"]==1 && snapshot[element]["checkOut"]!="Yes"){
-          orders.add(ConfirmCheckOut(
-              title: snapshot[element]["title"],
+
+
+          ConfirmCheckOut confirmCheckOut = ConfirmCheckOut(
+              title:snapshot[element]["title"],
               price:snapshot[element]["price"],
               quantity: snapshot[element]["quantity"],
               time: snapshot[element]["date"],
-              shop:snapshot[element]["shop"]
-          ));
+              shop:snapshot[element]["shop"],
+              mealOptions: snapshot[element]["selectedOptions"] ?? []
+
+          );
+
+          //log('THOSE OPTIONS ${confirmCheckOut.mealOptions}');
+          //print(confirmCheckOut.mealOptions);
+
+          orders.add(confirmCheckOut);
+          notifyListeners();
 
 
         }
@@ -68,7 +79,7 @@ class CheckOutState with ChangeNotifier{
         "price":orders[i].price,
         "shop":orders[i].shop,
         "date":orders[i].time,
-        "quantity":orders[i].quantity
+        "quantity":orders[i].quantity,
       });
       await Auth().checkOutApproved(orders[i]);
     }

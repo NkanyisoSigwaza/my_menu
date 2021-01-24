@@ -57,121 +57,81 @@ class Auth{
 
   //CB and edit
   Future checkOutApproved(ConfirmCheckOut food) async{
-    String uid = await inputData();
 
-    await Firestore.instance.collection("OrdersShops").document("OrdersShops").collection(food.shop).document(food.shop).collection(uid).document("${food.time.toDate()}").setData({
-      'title':food.title,
-      'price':food.price,
-      'quantity':food.quantity,
-      'active':1,
+    String uid = await inputData();
+    DateTime date = DateTime.now();
+    String time = date.toString();
+    int index = time.indexOf('.');
+    String timeUsed = time.substring(0,index);
+    String mealOption = "";
+
+    for(String option in food.mealOptions){
+      mealOption+=option +",";
+    }
+
+
+    await Firestore.instance.collection("OrdersShops").document("OrdersShops").collection(food.shop).document(uid).setData({
+      "$timeUsed": {
+        'title': food.title,
+        'mealOptions':mealOption,
+        'price': food.price,
+        'quantity': food.quantity,
+        'active': 1,
+        'user': uid,
+        'date':date
+      }
 
 
 
     },merge: true);
+    await Future.delayed(const Duration(seconds: 1), () => "1");
+
   
-
-    uid = await inputData();
-    // print(uid);
-
-
     return await Firestore.instance.collection("OrdersRefined").document(uid).updateData(
         {
           "${food.title}.checkOut": "Yes"
         });
 
 
+
   }
 
   List<ConfirmCheckOut> _ordersFromSnapshot(DocumentSnapshot snapshot) {
+   orders = [];
 
-    //String uid = await inputData();
-
-
-    //print(snapshot.data);
     snapshot.data.keys.forEach((element) {
-      //print(snapshot.data[element]);
+
       try {
 
         if(snapshot[element]["inActive"]==1 && snapshot[element]["checkOut"]!="Yes"){
-          // print(snapshot['$i']);
+
           orders.add(ConfirmCheckOut(
-            title: snapshot[element]["title"],
-            price:snapshot[element]["price"],
-            quantity: snapshot[element]["quantity"],
-            time: snapshot[element]["date"],
-            shop: snapshot[element]["shop"]
+              title:snapshot[element]["title"],
+              price:snapshot[element]["price"],
+              quantity: snapshot[element]["quantity"],
+              time: snapshot[element]["date"],
+              shop:snapshot[element]["shop"],
+              mealOptions: snapshot[element]["selectedOptions"] ?? []
           ));
 
-          // print(snapshot['$i']);
+
+
         }
       }
       catch(e){
         print(e);
       }
     });
-   // print(firstKey);
-    //print(snapshot.data[firstKey]);
-
-   // dynamic nka= snapshot.data;
-//    int size = snapshot.data.length;
-//
-//
-//    for (int i=1; i < size+1; i++) {
-////      if(snapshot['$i']["inActive"]=="1"){
-////        print(snapshot['$i']);
-////      }
-//      try {
-//
-//        if(snapshot['$i']["inActive"]=="1"){
-//         // print(snapshot['$i']);
-//          orders.add(Order(
-//            title: snapshot['$i']["title"],
-//            price:snapshot['$i']["price"],
-//            image:snapshot['$i']["image"],
-//            food_id:"yer" ,
-//            numOrders: i,
-//          ));
-//
-//         // print(snapshot['$i']);
-//         }
-//      }
-//      catch(e){
-//        print(e);
-//      }
-//      }
 
 
 
-//    print(snapshot.data['1'][
-//      'image'
-//    ]);
-
-
-
-//    return snapshot.documents.map((doc){
-//      // returning a brew object for each document
-
-//      return Order(
-//        title:doc.data["title"] ?? "", // if doesn't exist give it an empty string
-//        price: doc.data["price"] ?? 0,
-//
-//        image: doc.data["image"] ?? "",
-//        food_id:doc.data["id"] ?? "0",
-//        quantity: doc.data["quantity"] ?? 1,
-//
-//
-//      );
-//    }).toList();
   return orders;
 
   }
 
 
 
-//  Stream<List<Order>> get orders {
-//    //returns snapshot of database and tells us of any changes [provider]
-//    return orderCollection.snapshots().map(_ordersFromSnapshot);
-//  }
+
 
   Stream<List<ConfirmCheckOut>> myOrders(String user) {
     //returns snapshot of database and tells us of any changes [provider]
