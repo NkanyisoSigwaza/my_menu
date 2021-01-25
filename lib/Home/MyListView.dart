@@ -16,8 +16,10 @@ class MyListView extends StatefulWidget {
 }
 
 class _MyListViewState extends State<MyListView> {
+
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
 
     void _showSettingsPanel(FoodItem food){
       showModalBottomSheet(context: context, builder:(context){
@@ -31,102 +33,78 @@ class _MyListViewState extends State<MyListView> {
 
     return widget.foodAndConnect.length==0?
     Loading(): Container(
-      child:Expanded(
-        child: ListView.builder(
-          //scrollDirection: Axis.horizontal,
-          //shrinkWrap: true,
-            itemCount: widget.foodAndConnect.length,
-            itemBuilder: (context,index){
-              return Padding(
-                padding: EdgeInsets.fromLTRB(20, 20, 20,20),
-                child: Container(
-                  height: 220,
-                  width:300,
-                  child: GestureDetector(
-                    onTap: (){
+      height:screenSize.height*0.7,
 
-                     _showSettingsPanel(widget.foodAndConnect[index]);
-                    },
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+
+      child:ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: widget.foodAndConnect.length,
+          itemBuilder: (context,index){
+            return Padding(
+              padding: EdgeInsets.fromLTRB(20, 20, 20,20),
+              child: Container(
+                //height: 220,
+                height: screenSize.height*0.3,
+
+               // width:300,
+                width:screenSize.width*0.1,
+                child: GestureDetector(
+                  onTap: (){
+
+                   _showSettingsPanel(widget.foodAndConnect[index]);
+                  },
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                      color:Colors.black,
+                      //color:Colors.grey[200],
+                      child:Column(
+                        children: [
+                          Container(
+                            height:MediaQuery.of(context).size.height*0.2,
+                              width:MediaQuery.of(context).size.width*0.9,
+                            child:Image(
+                                image: NetworkImage(widget.foodAndConnect[index].image),
+                                fit:BoxFit.cover
+                            )
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                    widget.foodAndConnect[index].title,
+                                    style:TextStyle(
+                                        fontSize: 25,
+                                        color: Colors.white
+                                    )
+                                ),
+                                Text(
+                                    "R${widget.foodAndConnect[index].price.toStringAsFixed(2)}",
+                                    style:TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+
+                                    )
+                                ),
+                              ],
+                            ),
+                          ),
+
+                        ],
                       ),
-                        color:Colors.black,
-                        //color:Colors.grey[200],
-                        child:Column(
-                          children: [
-                            Container(
-                              height:150,
-                                width:800,
-                              child:Image(
-                                  image: NetworkImage(widget.foodAndConnect[index].image),
-                                  fit:BoxFit.fitWidth
-                              )
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                      widget.foodAndConnect[index].title,
-                                      style:TextStyle(
-                                          fontSize: 25,
-                                          color: Colors.white
-                                      )
-                                  ),
-                                  Text(
-                                      "R${widget.foodAndConnect[index].price.toStringAsFixed(2)}",
-                                      style:TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.white,
-
-                                      )
-                                  ),
-                                ],
-                              ),
-                            ),
-//                          Expanded(
-//                            child: Align(
-//                              alignment:Alignment.topLeft ,
-//                              child: Text(
-//                                  widget.foodAndConnect[index].title,
-//                                style:TextStyle(
-//                                  fontSize: 25,
-//                                  color: Colors.white
-//                                )
-//                              ),
-//                            ),
-//                          ),Expanded(
-//                            child: SizedBox(
-//                              height:5
-//                            ),
-//                          )
-//                          , Expanded(
-//                            child: Align(
-//                              alignment:Alignment.topLeft ,
-//                              child: Text(
-//                                  "R${widget.foodAndConnect[index].price}0",
-//                                  style:TextStyle(
-//                                      fontSize: 20,
-//                                      color: Colors.white,
-//
-//                                  )
-//                              ),
-//                            ),
-//                          ),
-                          ],
-                        ),
 
 
 
-                        elevation: 0),
-                  ),
+                      elevation: 0),
                 ),
+              ),
 
-              );
-            }
-        ),
+            );
+          }
       ),
     );
 

@@ -63,7 +63,8 @@ class _SignInState extends State<SignIn> {
 //
 //        ),
 //      ),
-      body: Container(
+      body: SingleChildScrollView(
+        child: Container(
 //        decoration: BoxDecoration(
 //            image: DecorationImage(
 //                image: AssetImage(
@@ -73,159 +74,160 @@ class _SignInState extends State<SignIn> {
 //                fit: BoxFit.contain
 //            )
 //        ),
-        padding:EdgeInsets.symmetric(vertical:20,horizontal: 50),
-        child: Column(
-          children: [
+          padding:EdgeInsets.symmetric(vertical:20,horizontal: 50),
+          child: Column(
+            children: [
 
 
 
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 80, 0, 10),
-              child: Container(
-               child:Image(
-                 image:AssetImage(
-                     "Picture/delDocLogo.png"
-                 ),
-               )
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 80, 0, 10),
+                child: Container(
+                 child:Image(
+                   image:AssetImage(
+                       "Picture/delDocLogo.png"
+                   ),
+                 )
+                ),
               ),
-            ),
-            Form(
-              key:singInState.formKey,
-              child:Column(
-                children: <Widget>[
-                  SizedBox(
-                    height:20,
-                  ),
-                  TextFormField(
-                    decoration: textInputDecoration.copyWith(hintText: "Email") ,
-                    validator: (val){
-                     return singInState.validateEmail(val);
-                    },
-                    onChanged: (val){
-                      //returns a value each time the user types or deletes something
-                      setState(() {
-                        singInState.email = val;
-                      });
-                    },
+              Form(
+                key:singInState.formKey,
+                child:Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height:20,
+                    ),
+                    TextFormField(
+                      decoration: textInputDecoration.copyWith(hintText: "Email") ,
+                      validator: (val){
+                       return singInState.validateEmail(val);
+                      },
+                      onChanged: (val){
+                        //returns a value each time the user types or deletes something
+                        setState(() {
+                          singInState.email = val;
+                        });
+                      },
 
-                  ),
-                  SizedBox(
-                      height:20
-                  ),
-                  TextFormField(
-                    decoration: textInputDecoration.copyWith(hintText: "Password"),
-                    validator: (val) {
-                      return singInState.validatePassword(val);
-                    },
-                    obscureText: true,// encrypts password
-                    onChanged: (val){
-                      //returns a value each time the user types or deletes something
-                      setState(() {
-                        singInState.password = val;
-                      });
-                    },
+                    ),
+                    SizedBox(
+                        height:20
+                    ),
+                    TextFormField(
+                      decoration: textInputDecoration.copyWith(hintText: "Password"),
+                      validator: (val) {
+                        return singInState.validatePassword(val);
+                      },
+                      obscureText: true,// encrypts password
+                      onChanged: (val){
+                        //returns a value each time the user types or deletes something
+                        setState(() {
+                          singInState.password = val;
+                        });
+                      },
 
-                  ),
-                  SizedBox(
-                      height:50
-                  ),
-                  FlatButton(
-                    onPressed:() async{
+                    ),
+                    SizedBox(
+                        height:50
+                    ),
+                    FlatButton(
+                      onPressed:() async{
 
-                      singInState.signInClicked();
+                        singInState.signInClicked();
 
-                    },
-                    color:Colors.grey[900],
-                    child:Text(
-                      "Sign in",
+                      },
+                      color:Colors.grey[900],
+                      child:Text(
+                        "Sign in",
+                        style:TextStyle(
+                          color:Colors.white,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      singInState.error,
                       style:TextStyle(
-                        color:Colors.white,
+                        color:Colors.red,
+                        fontSize: 14,
                       ),
                     ),
-                  ),
-                  Text(
-                    singInState.error,
-                    style:TextStyle(
-                      color:Colors.red,
-                      fontSize: 14,
-                    ),
-                  ),
 
 
-                ],
-              ),
-            ),
-            RaisedButton(
-              onPressed:() async{
-
-                widget.toggleView();
-
-              },
-              color:Colors.black,
-              child:Text(
-                "Don't have an account? Register",
-                style:TextStyle(
-                  color:Colors.green,
+                  ],
                 ),
               ),
-            ),
+              RaisedButton(
+                onPressed:() async{
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height:MediaQuery.of(context).size.height*0.03,
-                  width:MediaQuery.of(context).size.height*0.03,
-                  child: Image(
-                    image: NetworkImage("https://www.duupdates.in/wp-content/uploads/2020/07/google.jpg"),
+                  widget.toggleView();
+
+                },
+                color:Colors.black,
+                child:Text(
+                  "Don't have an account? Register",
+                  style:TextStyle(
+                    color:Colors.green,
                   ),
                 ),
-                FlatButton(
-                    height:MediaQuery.of(context).size.height*0.03,
-                    //color: Colors.white,
-                    onPressed: ()async{
-                      await singInState.handleGoogleSignIn();
-                    },
-                    child:Text(
-                      "Sign in with Google",
-                      style: TextStyle(
-                          color:Colors.white
-                      ),
-                    )
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left:15.0),
-                  child: Container(
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
                     height:MediaQuery.of(context).size.height*0.03,
                     width:MediaQuery.of(context).size.height*0.03,
                     child: Image(
-                      image: NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Facebook_logo_36x36.svg/600px-Facebook_logo_36x36.svg.png"),
+                      image: NetworkImage("https://www.duupdates.in/wp-content/uploads/2020/07/google.jpg"),
                     ),
                   ),
-                ),
-                FlatButton(
-                  height:MediaQuery.of(context).size.height*0.03,
-                  //color: Colors.white,
-                    onPressed: ()async{
-                      await singInState.signInFB();
-                    },
-                    child:Text(
-                      "Sign in with facebook",
-                      style: TextStyle(
-                          color:Colors.blue[800]
+                  FlatButton(
+                      height:MediaQuery.of(context).size.height*0.03,
+                      //color: Colors.white,
+                      onPressed: ()async{
+                        await singInState.handleGoogleSignIn();
+                      },
+                      child:Text(
+                        "Sign in with Google",
+                        style: TextStyle(
+                            color:Colors.white
+                        ),
+                      )
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left:15.0),
+                    child: Container(
+                      height:MediaQuery.of(context).size.height*0.03,
+                      width:MediaQuery.of(context).size.height*0.03,
+                      child: Image(
+                        image: NetworkImage("https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Facebook_logo_36x36.svg/600px-Facebook_logo_36x36.svg.png"),
                       ),
-                    )
-                ),
-              ],
-            ),
+                    ),
+                  ),
+                  FlatButton(
+                    height:MediaQuery.of(context).size.height*0.03,
+                    //color: Colors.white,
+                      onPressed: ()async{
+                        await singInState.signInFB();
+                      },
+                      child:Text(
+                        "Sign in with facebook",
+                        style: TextStyle(
+                            color:Colors.blue[800]
+                        ),
+                      )
+                  ),
+                ],
+              ),
 
 
-          ],
+            ],
+          ),
         ),
       ),
     );

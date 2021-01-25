@@ -16,11 +16,7 @@ class Options extends StatefulWidget {
 }
 
 class _OptionsState extends State<Options> {
-  // List<Option> options = [
-  //   Option(category: "Food",url:"https://www.helpguide.org/wp-content/uploads/fast-foods-candy-cookies-pastries-768.jpg"),
-  //   Option(category:"Liquor",url:"https://www.sabcnews.com/sabcnews/wp-content/uploads/2020/07/sabc-news-alcohol-R.jpg"),
-  //   Option(category:"Gifts",url:"https://static.zando.co.za/cms/gift-ideas/Gift-ideas-gifts-for-dad.jpg")
-  // ];
+
   @override
   Widget build(BuildContext context) {
     final optionsState = Provider.of<OptionsState>(context);
@@ -41,7 +37,7 @@ class _OptionsState extends State<Options> {
           backgroundColor: Colors.grey[900],
         ),
       ),
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Container(
           color: Colors.black,
           child: Column(
