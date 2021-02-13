@@ -61,7 +61,7 @@ class SignInState with ChangeNotifier {
       dynamic result = await signInWithEmailAndPassword(
           email, password); //used dynamic because could either get user or null
       if (result == null) {
-        error = "Could not sign in with those credentials";
+        //error = "Could not sign in with those credentials";
         loading = false;
       }
     }
@@ -77,11 +77,47 @@ class SignInState with ChangeNotifier {
     try{
       AuthResult result  = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser fb_user = result.user;
-      return _userFromFireBaseUser(fb_user);
+
+      if(fb_user.isEmailVerified){
+        return _userFromFireBaseUser(fb_user);
+      }
+      error = "Verify Email!";
+      notifyListeners();
+      return null;
     }
     catch(e){
       print(e);
-      print("could not sign in");
+      switch (e.code) {
+
+        case "ERROR_EMAIL_ALREADY_IN_USE":
+          error = "Email already registered, sign in.";
+          break;
+
+        case "ERROR_INVALID_EMAIL":
+          error = "Your email address appears to be malformed.";
+          break;
+        case "ERROR_WRONG_PASSWORD":
+          error = "You have entered an incorrect password";
+          break;
+        case "ERROR_USER_NOT_FOUND":
+          error= "User with this email doesn't exist.";
+          break;
+        case "ERROR_USER_DISABLED":
+          error = "User with this email has been disabled.";
+          break;
+        case "ERROR_TOO_MANY_REQUESTS":
+          error = "Too many requests. Try again later.";
+          break;
+        case "ERROR_OPERATION_NOT_ALLOWED":
+          error = "Signing in with Email and Password is not enabled.";
+          break;
+        case "ERROR_NETWORK_REQUEST_FAILED":
+          error = "Please check your internet connection";
+          break;
+
+        default:
+          error = "An undefined Error happened.";
+      }
       return null;
 
     }
@@ -133,6 +169,7 @@ class SignInState with ChangeNotifier {
       });
 
       await Future.delayed(const Duration(seconds: 1), () => "1");
+
 
       if(new_user){
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mymenu/Models/ConfirmCheckOut.dart';
 import 'package:mymenu/Models/FoodItem.dart';
@@ -10,7 +11,7 @@ import 'package:mymenu/Models/Order.dart';
 import 'package:mymenu/Models/User.dart';
 
 
-class Auth{
+class Auth {
   //allows us to use firebase authentication -- line below
 
   final FirebaseAuth _auth = FirebaseAuth.instance;  //_ means private in variable auth
@@ -20,15 +21,20 @@ class Auth{
   //List<Order> orders = [Order(image: "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg",price: 0,food_id: "placeholder")];
   //create user object based on Firebase user
   List<ConfirmCheckOut> orders = [];
-  User _userFromFireBaseUser(FirebaseUser user){
-    return user!=null ? User(userId: user.uid) : null;
-  }
+  // User _userFromFireBaseUser(FirebaseUser user){
+  //   return user!=null ? User(userId: user.uid) : null;
+  // }
   // auth change user stream
 
+  bool showSignIn = true;
 
-  Stream< User> get user{
+
+
+
+
+  Stream< FirebaseUser> get user{
     //tells us each time user signs in / out
-    return _auth.onAuthStateChanged.map(_userFromFireBaseUser);
+    return _auth.onAuthStateChanged;
   }
   
 
@@ -56,7 +62,7 @@ class Auth{
 
 
   //CB and edit
-  Future checkOutApproved(ConfirmCheckOut food) async{
+  Future checkOutApproved(ConfirmCheckOut food, double promo,String indexPromo,String promoApplied) async{
 
     String uid = await inputData();
     DateTime date = DateTime.now();
@@ -78,18 +84,28 @@ class Auth{
         'quantity': food.quantity,
         'active': 1,
         'user': uid,
-        'date':date
+        'date':date,
+        'shopSeen':"No",
+        'promo': promoApplied=="Yes" ? promo: 0
+
       }
 
 
 
     },merge: true);
     await Future.delayed(const Duration(seconds: 1), () => "1");
+    if(promoApplied=="Yes") {
+      await Firestore.instance.collection("Users").document(uid).updateData(
+          {
+            "promotions.$indexPromo.used": "Yes",
+          });
+    }
 
   
     return await Firestore.instance.collection("OrdersRefined").document(uid).updateData(
         {
-          "${food.title}.checkOut": "Yes"
+          "${food.title}.checkOut": "Yes",
+          "${food.title}.promo":promoApplied=="Yes" ? promo: 0
         });
 
 
@@ -103,7 +119,7 @@ class Auth{
 
       try {
 
-        if(snapshot[element]["inActive"]==1 && snapshot[element]["checkOut"]!="Yes"){
+        if(snapshot[element]["active"]==1 && snapshot[element]["checkOut"]!="Yes"){
 
           orders.add(ConfirmCheckOut(
               title:snapshot[element]["title"],
@@ -159,4 +175,6 @@ class Auth{
     return user.uid;
     // here you write the codes to input the data into firestore
   }
+
+
 }

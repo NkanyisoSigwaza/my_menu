@@ -8,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
 import 'package:mymenu/Models/ConfirmCheckOut.dart';
+import 'package:mymenu/Models/PromoCheckOut.dart';
+import 'package:mymenu/Models/Promotion.dart';
 import 'package:mymenu/Shared/Database.dart';
 import 'package:mymenu/Shared/Price.dart';
 
@@ -16,6 +18,7 @@ class CheckOutState with ChangeNotifier{
   List<ConfirmCheckOut> orders = [];
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final price = Price();
+  double promo=0;
 
 
 
@@ -81,7 +84,7 @@ class CheckOutState with ChangeNotifier{
         "date":orders[i].time,
         "quantity":orders[i].quantity,
       });
-      await Auth().checkOutApproved(orders[i]);
+      // await Auth().checkOutApproved(orders[i]);
     }
   }
 
@@ -108,6 +111,44 @@ class CheckOutState with ChangeNotifier{
     catch(e){
 
     }
+  }
+
+  Future<Map<String,dynamic>> _getPromosFromUser()async{
+    dynamic uid = await Auth().inputData();
+     DocumentSnapshot user =await Firestore.instance.collection("Users").document(uid).get();
+     print(user['promotions']);
+      return user['promotions'];
+  }
+
+  Future<PromoCheckOut> shopPromo(String shop)async{
+    Map<String,dynamic> userPromos = await _getPromosFromUser();
+    QuerySnapshot promoQuery = await Firestore.instance.collection("Promotions").getDocuments();
+    List<DocumentSnapshot> promos = promoQuery.documents;
+    PromoCheckOut promoCheckOut;
+    List<String> userPromoKey = userPromos.keys.toList();
+    if(userPromoKey.isNotEmpty) {
+      for (int i = 0; i < userPromoKey.length; i++) {
+        for (int j = 0; j < promos.length; j++) {
+          print("${promos[j]
+              .data['promoCode']} VS ${userPromos[userPromoKey[i]]["promoCode"]}");
+          print(promos[j].documentID);
+          if (promos[j].data['promoCode'] == userPromos[userPromoKey[i]]["promoCode"] &&
+              userPromos[userPromoKey[i]]["used"] == "No" &&
+              promos[j].documentID == shop) {
+            promoCheckOut = PromoCheckOut(
+                promoValue: promos[j].data['promoValue'],
+                index: userPromoKey[i],
+                price: promos[j].data['price'].toDouble() ?? 0
+            );
+            return promoCheckOut;
+          }
+        }
+      }
+    }
+    return null;
+
+
+
   }
 
 

@@ -7,6 +7,7 @@ import 'package:mymenu/Shared/Constants.dart';
 import 'package:mymenu/Shared/Loading.dart';
 import 'package:mymenu/States/UserDrawerState.dart';
 import 'package:provider/provider.dart';
+import 'package:mymenu/Home/AfterCheckOut.dart';
 
 class UserDrawer extends StatefulWidget {
   @override
@@ -106,6 +107,16 @@ class _UserDrawerState extends State<UserDrawer> {
               userDrawerState.verifyPromo();
             },
             child: Text("Submit"),
+          ),
+          FlatButton(
+            child:Text("Order Progress"),
+            onPressed: ()async{
+
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> AfterCheckOut()));
+
+              Navigator.pop(context);
+
+            },
           ),
           FlatButton(
               onPressed: (){

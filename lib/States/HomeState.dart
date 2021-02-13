@@ -153,15 +153,10 @@ class HomeState with ChangeNotifier{
 
   }
 
- dynamic _mealsOption(QuerySnapshot meals){
-    print("Hey");
-    return null;
-    //print(meals);
-  }
 
   Future<List<Meal>> allMeals(Shop shop, String category)async{
 
-    print("Options/${shop.category}/${shop.category}/${shop.shopName}/Meals");
+
 
     List<MealOption> options = [];
 

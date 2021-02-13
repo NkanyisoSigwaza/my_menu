@@ -16,6 +16,7 @@ class PersonalizeMeal extends StatefulWidget {
 class _PersonalizeMealState extends State<PersonalizeMeal> {
   List<DropDown> dropDown;
   List<DropdownMenuItem<MealOption>> _dropdownMenuItems;
+  bool orderSameShop = true;
 
   loadDropDownItems(){
     dropDown =[];
@@ -91,13 +92,49 @@ class _PersonalizeMealState extends State<PersonalizeMeal> {
     calculatePrice();
     selectedOption();
 
+    PersonalizeMealState().checkIfSameShop( widget.meal.shop).then((value)
+    {
+      setState(() {
+        print('Value: $value');
+        orderSameShop =value;
+      });
+    }
+    );
+    print('OrderSameShop: $orderSameShop');
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    return Padding(
+    return orderSameShop !=true ? Container(
+        child:Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+                "You cannot order from more than 1 shop at a time",
+
+                style:TextStyle(
+                    color:Colors.red[900],
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                    fontSize: 20
+                )
+            ),
+            Text(
+                "Please continue checkOut your previous order first",
+
+                style:TextStyle(
+                    color:Colors.red[900],
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                    fontSize: 20
+                )
+            )
+          ],
+        )
+    ) :Container(
       padding: EdgeInsets.only(top:20),
       child: SingleChildScrollView(
         child: Container(

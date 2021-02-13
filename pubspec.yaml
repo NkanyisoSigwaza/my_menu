@@ -26,6 +26,7 @@ dependencies:
   flutter_spinkit: "^4.1.2"
   google_maps_flutter: ^0.5.25+3
   location: ^3.0.2
+  firebase_messaging:
 
   image_picker: ^0.6.0+17
   image_cropper: ^1.2.1
@@ -43,6 +44,7 @@ dependencies:
   google_sign_in: ^4.5.4
   flutter_facebook_login: ^3.0.0
   carousel_slider: ^2.2.1
+  hexcolor: ^1.0.6
 
 
 
@@ -74,6 +76,10 @@ flutter:
   - Picture/car_icon.png
   - Picture/avatar.png
   - Picture/delDocLogo.png
+  - Picture/HalaLogo.jpeg
+  - Picture/HalaTransparent.jpeg
+  - Picture/HalaWhite.png
+  - Picture/preparingOrder.gif
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

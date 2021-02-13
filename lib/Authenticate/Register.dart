@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:mymenu/Authenticate/Auth.dart';
 import 'package:mymenu/Shared/Constants.dart';
 import 'package:mymenu/Shared/Loading.dart';
@@ -22,8 +23,7 @@ class _RegisterState extends State<Register> {
     return registerState.loading
         ? Loading()
         : Scaffold(
-      resizeToAvoidBottomInset: false,
-            backgroundColor: Colors.black,
+            backgroundColor: HexColor("#393939"),
 
             body: SingleChildScrollView(
               child: Container(
@@ -33,11 +33,11 @@ class _RegisterState extends State<Register> {
                   child: Column(
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 80, 0, 10),
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                         child: Container(
                             child:Image(
                               image:AssetImage(
-                                  "Picture/delDocLogo.png"
+                                  "Picture/HalaLogo.jpeg"
                               ),
                             )
                         ),
@@ -107,7 +107,14 @@ class _RegisterState extends State<Register> {
                           });
                         },
                       ),
-                      SizedBox(height: 50),
+                      SizedBox(height: MediaQuery.of(context).size.height*0.01),
+                      Text(
+                        registerState.emailConfirmation,
+                        style:TextStyle(
+                          color:Colors.amber,
+                          fontSize: 24
+                        )
+                      ),
                       RaisedButton(
                         onPressed: () async {
 

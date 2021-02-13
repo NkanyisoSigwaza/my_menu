@@ -13,6 +13,7 @@ class Description extends StatefulWidget {
 
   final FoodItem food;
 
+
   Description({this.food});
 
 
@@ -23,13 +24,53 @@ class Description extends StatefulWidget {
 class _DescriptionState extends State<Description> {
 
 
+  bool orderSameShop = true;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    DescriptionState().checkIfSameShop( widget.food.shop).then((value)
+    {
+      setState(() {
+        print('Value: $value');
+        orderSameShop =value;
+      });
+    }
+    );
+    print('OrderSameShop: $orderSameShop');
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final descriptionState = Provider.of<DescriptionState>(context);
     widget.food.quantity = descriptionState.count;
 
-    return Container(
+    return orderSameShop !=true ? Container(
+
+      child:Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text(
+              "You cannot order from more than 1 shop at a time",
+            style:TextStyle(
+              color:Colors.red[900],
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              letterSpacing: 2
+            )
+          ),
+          Text(
+              "Please check out your previous order first!",
+              style:TextStyle(
+                  color:Colors.red[900],
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                  fontSize: 20
+              )
+          )
+        ],
+      )
+    ) : Container(
       child:Column(
         children: <Widget>[
           Text(
@@ -116,7 +157,7 @@ class _DescriptionState extends State<Description> {
             onPressed: ()async{
 
               setState(() {
-                descriptionState.count = 0;
+                //descriptionState.count = 0;
                 descriptionState.logOrderToCart(
                   title: widget.food.title,
                   shop: widget.food.shop,
