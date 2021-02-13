@@ -53,6 +53,7 @@ class _MapState extends State<Map> {
     //appState.markers.removeWhere((element) => element.markerId == "Naledi");
     //appState.markers.removeWhere((element) => element.markerId == "Naledi");
 
+    // location from driver
     final locat = Provider.of<List<LocationN>>(context);
 
 

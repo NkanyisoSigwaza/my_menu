@@ -14,6 +14,8 @@ class RegisterState with ChangeNotifier {
   //Auth _auth; //will change later
   String email = "";
   String password = "";
+  bool isEmailVerified =false;
+  String emailConfirmation = "";
   final FirebaseAuth _auth= FirebaseAuth.instance;
   TextEditingController name = TextEditingController();
   TextEditingController surname = TextEditingController();
@@ -106,26 +108,9 @@ class RegisterState with ChangeNotifier {
           email, password); //used dynamic because could either get user or null
       if (result == null) {
         loading = false;
-        error = "please supply a valid email";
+        //error = "please supply a valid email";
       }
-      else{
 
-        // loads user data to database every time new user registers
-          String uid = await Auth().inputData();
-          return await Firestore.instance.collection("Users").document(uid).setData({
-
-
-            "name":name.text,
-            "surname":surname.text,
-            "email":email,
-            "user":"Customer",
-            "date":DateTime.now()
-
-          });
-
-
-
-      }
     }
     notifyListeners();
   }
@@ -144,12 +129,72 @@ class RegisterState with ChangeNotifier {
       //grab user from that result
       FirebaseUser fb_user  = result.user;
 
+      if(fb_user !=null){
+        await fb_user.sendEmailVerification().then((value){
+          print("__________________Is email verified: ${fb_user.isEmailVerified}");
+
+        });
+        // loads user data to database every time new user registers
+        String uid = await Auth().inputData();
+        await Firestore.instance.collection("Users").document(uid).setData({
+
+
+          "name":name.text,
+          "surname":surname.text,
+          "email":email,
+          "user":"Customer",
+          "date":DateTime.now()
+
+        });
+        //await Future.delayed(const Duration(seconds: 1), () => "1");
+      }
+
+
+
+      print("Is email verified: ${fb_user.isEmailVerified}");
+
+
+
+
       //create a new document for user with uid
-      return _userFromFireBaseUser(fb_user);
+      return fb_user.isEmailVerified ? _userFromFireBaseUser(fb_user): null;
       // will only work if it was succesful ie can sign in with email and password
     }
     catch(e){
       print(e);
+      switch (e.code) {
+
+        case "ERROR_EMAIL_ALREADY_IN_USE":
+          error = "Email already registered, sign in.";
+          break;
+
+        case "ERROR_INVALID_EMAIL":
+          error = "Your email address appears to be malformed.";
+          break;
+        case "ERROR_WRONG_PASSWORD":
+          error = "Your password is wrong.";
+          break;
+        case "ERROR_USER_NOT_FOUND":
+          error= "User with this email doesn't exist.";
+          break;
+        case "ERROR_USER_DISABLED":
+          error = "User with this email has been disabled.";
+          break;
+        case "ERROR_TOO_MANY_REQUESTS":
+          error = "Too many requests. Try again later.";
+          break;
+        case "ERROR_OPERATION_NOT_ALLOWED":
+          error = "Signing in with Email and Password is not enabled.";
+          break;
+        case "ERROR_NETWORK_REQUEST_FAILED":
+          error = "Please check your internet connection";
+          break;
+
+
+        default:
+          error = "An undefined Error happened.";
+      }
+      notifyListeners();
       print("could not create user");
       return null;
 

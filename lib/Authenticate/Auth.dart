@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mymenu/Models/ConfirmCheckOut.dart';
 import 'package:mymenu/Models/FoodItem.dart';
@@ -10,7 +11,7 @@ import 'package:mymenu/Models/Order.dart';
 import 'package:mymenu/Models/User.dart';
 
 
-class Auth{
+class Auth {
   //allows us to use firebase authentication -- line below
 
   final FirebaseAuth _auth = FirebaseAuth.instance;  //_ means private in variable auth
@@ -20,15 +21,20 @@ class Auth{
   //List<Order> orders = [Order(image: "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg",price: 0,food_id: "placeholder")];
   //create user object based on Firebase user
   List<ConfirmCheckOut> orders = [];
-  User _userFromFireBaseUser(FirebaseUser user){
-    return user!=null ? User(userId: user.uid) : null;
-  }
+  // User _userFromFireBaseUser(FirebaseUser user){
+  //   return user!=null ? User(userId: user.uid) : null;
+  // }
   // auth change user stream
 
+  bool showSignIn = true;
 
-  Stream< User> get user{
+
+
+
+
+  Stream< FirebaseUser> get user{
     //tells us each time user signs in / out
-    return _auth.onAuthStateChanged.map(_userFromFireBaseUser);
+    return _auth.onAuthStateChanged;
   }
   
 
@@ -56,111 +62,92 @@ class Auth{
 
 
   //CB and edit
-  Future checkOutApproved(ConfirmCheckOut food) async{
+  Future checkOutApproved(ConfirmCheckOut food, double promo,String indexPromo,String promoApplied) async{
+
+    String uid = await inputData();
+    DateTime date = DateTime.now();
+    String time = date.toString();
+    int index = time.indexOf('.');
+    String timeUsed = time.substring(0,index);
+    String mealOption = "";
+
+    for(String option in food.mealOptions){
+      mealOption+=option +",";
+    }
+
+
+    await Firestore.instance.collection("OrdersShops").document("OrdersShops").collection(food.shop).document(uid).setData({
+      "$timeUsed": {
+        'title': food.title,
+        'mealOptions':mealOption,
+        'price': food.price,
+        'quantity': food.quantity,
+        'active': 1,
+        'user': uid,
+        'date':date,
+        'shopSeen':"No",
+        'promo': promoApplied=="Yes" ? promo: 0
+
+      }
 
 
 
-    uid = await inputData();
-    // print(uid);
+    },merge: true);
+    await Future.delayed(const Duration(seconds: 1), () => "1");
+    if(promoApplied=="Yes") {
+      await Firestore.instance.collection("Users").document(uid).updateData(
+          {
+            "promotions.$indexPromo.used": "Yes",
+          });
+    }
 
-
+  
     return await Firestore.instance.collection("OrdersRefined").document(uid).updateData(
         {
-          "${food.title}.checkOut": "Yes"
+          "${food.title}.checkOut": "Yes",
+          "${food.title}.promo":promoApplied=="Yes" ? promo: 0
         });
+
 
 
   }
 
   List<ConfirmCheckOut> _ordersFromSnapshot(DocumentSnapshot snapshot) {
+   orders = [];
 
-    //String uid = await inputData();
-
-
-    //print(snapshot.data);
     snapshot.data.keys.forEach((element) {
-      //print(snapshot.data[element]);
+
       try {
 
-        if(snapshot[element]["inActive"]==1 && snapshot[element]["checkOut"]!="Yes"){
-          // print(snapshot['$i']);
+        if(snapshot[element]["active"]==1 && snapshot[element]["checkOut"]!="Yes"){
+
           orders.add(ConfirmCheckOut(
-            title: snapshot[element]["title"],
-            price:snapshot[element]["price"],
-            quantity: snapshot[element]["quantity"],
-            time: snapshot[element]["date"]
+              title:snapshot[element]["title"],
+              price:snapshot[element]["price"],
+              quantity: snapshot[element]["quantity"],
+              time: snapshot[element]["date"],
+              shop:snapshot[element]["shop"],
+              mealOptions: snapshot[element]["selectedOptions"] ?? []
           ));
 
-          // print(snapshot['$i']);
+
+
         }
       }
       catch(e){
         print(e);
       }
     });
-   // print(firstKey);
-    //print(snapshot.data[firstKey]);
-
-   // dynamic nka= snapshot.data;
-//    int size = snapshot.data.length;
-//
-//
-//    for (int i=1; i < size+1; i++) {
-////      if(snapshot['$i']["inActive"]=="1"){
-////        print(snapshot['$i']);
-////      }
-//      try {
-//
-//        if(snapshot['$i']["inActive"]=="1"){
-//         // print(snapshot['$i']);
-//          orders.add(Order(
-//            title: snapshot['$i']["title"],
-//            price:snapshot['$i']["price"],
-//            image:snapshot['$i']["image"],
-//            food_id:"yer" ,
-//            numOrders: i,
-//          ));
-//
-//         // print(snapshot['$i']);
-//         }
-//      }
-//      catch(e){
-//        print(e);
-//      }
-//      }
 
 
 
-//    print(snapshot.data['1'][
-//      'image'
-//    ]);
-
-
-
-//    return snapshot.documents.map((doc){
-//      // returning a brew object for each document
-
-//      return Order(
-//        title:doc.data["title"] ?? "", // if doesn't exist give it an empty string
-//        price: doc.data["price"] ?? 0,
-//
-//        image: doc.data["image"] ?? "",
-//        food_id:doc.data["id"] ?? "0",
-//        quantity: doc.data["quantity"] ?? 1,
-//
-//
-//      );
-//    }).toList();
   return orders;
 
   }
 
 
 
-//  Stream<List<Order>> get orders {
-//    //returns snapshot of database and tells us of any changes [provider]
-//    return orderCollection.snapshots().map(_ordersFromSnapshot);
-//  }
+
 
   Stream<List<ConfirmCheckOut>> myOrders(String user) {
     //returns snapshot of database and tells us of any changes [provider]
@@ -188,4 +175,6 @@ class Auth{
     return user.uid;
     // here you write the codes to input the data into firestore
   }
+
+
 }

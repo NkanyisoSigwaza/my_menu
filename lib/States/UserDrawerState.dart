@@ -28,7 +28,8 @@ TextEditingController promoCode = TextEditingController();
 
           Promotion promo= Promotion(
             promoCode: document.documents[elementIndex].data["promoCode"],
-            promoValue: document.documents[elementIndex].data["promoValue"]
+            promoValue: document.documents[elementIndex].data["promoValue"],
+            shop: document.documents[elementIndex].documentID,
           );
 
           return promo;
@@ -40,11 +41,70 @@ TextEditingController promoCode = TextEditingController();
     return promotion;
   }
 
+  Future checkIfPromoUsed()async{
+    DocumentSnapshot user;
+    String uid = await Auth().inputData();
+    user = await Firestore.instance.collection("Users").document(uid).get();
+    await Future.delayed(const Duration(seconds: 1), () => "1");
+    Map<String,dynamic> promos = user["promotions"];
+
+
+    if(promos==null){
+      return false;
+    }
+    List<String> promotions = promos.keys.toList();
+
+
+    for(int i=0;i<promotions.length;i++){
+
+      if(promoCode.text == promos[promotions[i]]["promoCode"]){
+        print("Promo Used");
+        return true;
+        //promo used
+      }
+    }
+    return false;
+  }
+
   void verifyPromo()async{
-    dynamic validPromoCheck = await _findPromos();
+    dynamic uid = await Auth().inputData();
+    Promotion validPromoCheck = await _findPromos();
+    bool promoUsed = await checkIfPromoUsed();
     await Future.delayed(const Duration(seconds: 1), () => "1");
 
-    if (validPromoCheck !=null){
+    if (validPromoCheck !=null && promoUsed==false){
+
+      DocumentSnapshot user =await Firestore.instance.collection("Users").document(uid).get();
+      dynamic promos = user['promotions'];
+      
+      if(promos==null){
+        Map<String,dynamic> data = {
+          'promotions':{
+            "${DateTime.now()}".split('.').join(','):{
+              "promoCode":promoCode.text,
+              "used":"No"
+            }
+          }
+
+        };
+        await Firestore.instance.collection("Users").document(uid).setData(data,merge:true);
+      }
+      else{
+
+        Map<String,dynamic> data = {
+          "promotions":{
+            "${DateTime.now()}".split('.').join(','):{
+              "promoCode":promoCode.text,
+              "used":"No"
+            }
+          }
+
+        };
+        await Firestore.instance.collection("Users").document(uid).setData(data,merge:true);
+
+      }
+
+
       validPromo = "Successfully added Promo!";
 
 
@@ -53,9 +113,14 @@ TextEditingController promoCode = TextEditingController();
 
 
     }
-    else{
+    else if (promoUsed==true){
 
-      validPromo = "Incorrect Promo!";
+      validPromo = "Promo already used!";
+      promoCode.clear();
+      notifyListeners();
+    }
+    else{
+      validPromo = "Incorrect promo!";
       promoCode.clear();
       notifyListeners();
     }
@@ -87,6 +152,46 @@ TextEditingController promoCode = TextEditingController();
 
 
   }
+
+bool  _hasOrdered(DocumentSnapshot snapshot){
+  List<String> all =[];
+  bool placedOrder= false;
+
+
+  snapshot.data.keys.forEach((element) {
+
+    try {
+
+      if(snapshot[element]["active"]==1){
+        placedOrder = true;
+
+        print('shopSeen: snapshot[element]["shopSeen"]');
+        print(snapshot[element]["active"]);
+        print(snapshot[element]["shop"]);
+
+      }
+    }
+    catch(e){
+      print(e);
+    }
+  });
+
+  return placedOrder;
+
+}
+
+
+
+
+
+
+
+Stream<bool> hasCustomerOrdered(){
+    dynamic uid = Auth().inputData();
+  return Firestore.instance.collection('OrdersRefined').document(uid).snapshots().map(_hasOrdered);
+}
+
+
 
 
   logUser(){

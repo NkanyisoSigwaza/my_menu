@@ -16,16 +16,14 @@ class Options extends StatefulWidget {
 }
 
 class _OptionsState extends State<Options> {
-  // List<Option> options = [
-  //   Option(category: "Food",url:"https://www.helpguide.org/wp-content/uploads/fast-foods-candy-cookies-pastries-768.jpg"),
-  //   Option(category:"Liquor",url:"https://www.sabcnews.com/sabcnews/wp-content/uploads/2020/07/sabc-news-alcohol-R.jpg"),
-  //   Option(category:"Gifts",url:"https://static.zando.co.za/cms/gift-ideas/Gift-ideas-gifts-for-dad.jpg")
-  // ];
+
   @override
   Widget build(BuildContext context) {
     final optionsState = Provider.of<OptionsState>(context);
     final optionCategories = Provider.of<List<Option>>(context);
+
     return optionCategories==null? Loading():Scaffold(
+      resizeToAvoidBottomInset: true,
       drawer: UserDrawer(),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),
@@ -41,8 +39,11 @@ class _OptionsState extends State<Options> {
           backgroundColor: Colors.grey[900],
         ),
       ),
-      body: SafeArea(
+      body: SingleChildScrollView(
+
         child: Container(
+          height:MediaQuery.of(context).size.height,
+          //width: double.infinity,
           color: Colors.black,
           child: Column(
             children: [
@@ -62,43 +63,45 @@ class _OptionsState extends State<Options> {
               SizedBox(
                 height:40
               ),
-              GridView.builder(
-                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: optionCategories.length,
-                  itemBuilder: (context,index){
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(20,0,20,20),
-                      child: Column(
-                        //mainAxisAlignment: MainAxisAlignment.center,
-                          children:[
-                      Text(
-                        optionCategories[index].category,
-                        style: TextStyle(
-                          fontSize:30,
-                          color: Colors.amber,
-                          letterSpacing: 2
+              Flexible(
+                fit: FlexFit.loose,
+                child: GridView.builder(
+                    gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: optionCategories.length,
+                    itemBuilder: (context,index){
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(20,0,20,20),
+                        child: Column(
+                          //mainAxisAlignment: MainAxisAlignment.center,
+                            children:[
+                        Text(
+                          optionCategories[index].category,
+                          style: TextStyle(
+                            fontSize:30,
+                            color: Colors.amber,
+                            letterSpacing: 2
+                          ),
                         ),
-                      ),
-                            Expanded(
-                              child: GestureDetector(
-                                child: Container(
-                                  //width:300,
-                                  //height:600,
-                                  margin:EdgeInsets.all(20),
+                              Expanded(
+                                child: GestureDetector(
+                                  child: Container(
+                                    //width:300,
+                                    //height:600,
+                                    margin:EdgeInsets.all(20),
 
 
 
-                                  child: CircleAvatar(
-                                    backgroundImage:NetworkImage(optionCategories[index].url ?? "https://www.bengi.nl/wp-content/uploads/2014/10/no-image-available1.png"),
-                                    radius:55,
+                                    child: CircleAvatar(
+                                      backgroundImage:NetworkImage(optionCategories[index].url ?? "https://www.bengi.nl/wp-content/uploads/2014/10/no-image-available1.png"),
+                                      radius:55,
+                                    ),
                                   ),
-                                ),
-                                onTap: (){
-                                  setState(() {
-                                    optionsState.logOptionScreen(optionCategories[index].category);
+                                  onTap: (){
+                                    setState(() {
+                                      optionsState.logOptionScreen(optionCategories[index].category);
 
 
       Navigator.push(context,MaterialPageRoute(builder: (context){
@@ -109,7 +112,9 @@ class _OptionsState extends State<Options> {
 
           ],
             child: Shops(category:optionCategories[index].category ,));
-      }));
+      }
+      )
+      );
 
 
     // Navigator.push(context,MaterialPageRoute(builder: (context){
@@ -126,16 +131,17 @@ class _OptionsState extends State<Options> {
 //                                      );
 
     });
-                                      }
-                                
-                                      ,
+                                        }
+                                  
+                                        ,
+                                ),
                               ),
-                            ),
 
-                          ]
-                      ),
-                    );
-                  }
+                            ]
+                        ),
+                      );
+                    }
+                ),
               ),
             ],
           ),
